@@ -9,8 +9,13 @@ import { FirestoreService } from '../../services/firestore/firestore.service';
 export class CatsComponent implements OnInit {
 
   public cats: any;
+  phoneNumber: any;
+  otp: any;
+  windowRef: any;
 
-  constructor(private firestoreService: FirestoreService) { }
+  constructor(private firestoreService: FirestoreService) {
+    this.windowRef = firestoreService.getWindowRef();
+  }
 
   ngOnInit() {
 
@@ -23,6 +28,9 @@ export class CatsComponent implements OnInit {
         });
       })
     });
+
+    this.windowRef.recaptchaVerifier = null;
+    console.log(this.firestoreService.recaptchaVerifier());
     
   }
 }

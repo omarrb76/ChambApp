@@ -1,31 +1,18 @@
-
-<div class="grd">
-    <div class="grd-row">
-        <div class="grd-row-col-2">
-            <h1>🐱 Gatos 🐱</h1>
-            <form>
-                <label for="nombre">Nombre</label>
-                <input type="text" name="nombre">
-                <label for="url_img">Imagen</label>
-                <input type="url" name="url_img">
-                <input type="submit" class="btn--blue btn--add" value="Agregar">
-            </form>
-        </div>
-        <div class="grd-row-col-4">
-            <div class="cats_container">
-                <div class="media" *ngFor="let cat of cats">
-                    <div class="media-figure">
-                        <img [src]="cat.data.url">
-                    </div>
-                    <div class="media-body">
-                        <p>{{cat.data.nombre}}</p>
-                        <div class="btn--group">
-                            <button class="btn--green btn--s btn1">Editar</button>
-                            <button class="btn--red btn--s btn2">Eliminar</button>
-                        </div>
-                    </div>
-                </div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input name="phoneNumber" [(ngModel)]="phoneNumber" type="text" class="form-control">
             </div>
+            <div id="recaptcha-container"></div>
+            <button class="btn btn-primary btn-block">SEND OTP</button>
+            <hr>
+            <div class="form-group">
+                <label for="otp">OTP</label>
+                <input name="otp" [(ngModel)]="otp" type="text" class="form-control">
+            </div>
+            <button class="btn btn-danger btn-block">VERIFY OTP</button>
         </div>
     </div>
 </div>
