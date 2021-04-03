@@ -15,11 +15,13 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 // Componentes
 import { AppComponent } from './app.component';
 import { CatsComponent } from './components/cats/cats.component';
+import { PruebaComponent } from './components/prueba/prueba.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CatsComponent
+    CatsComponent,
+    PruebaComponent
   ],
   imports: [
     BrowserModule,
