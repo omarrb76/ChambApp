@@ -1,3 +1,4 @@
+import { Archivo } from './../../models/Archivo';
 import { StorageService } from './../../services/firebase/storage.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -19,8 +20,7 @@ export class PruebaComponent {
   loading = false;
 
   // Múltiples archivos, en estos arreglos estarán los archivos y las referencias (links) a ellos
-  archivos: any[] = [];
-  referencias: string[] = [];
+  archivos: Archivo[] = [];
 
   // Usamos el servicio de storage
   constructor(private storageService: StorageService) { }
@@ -34,7 +34,11 @@ export class PruebaComponent {
       this.mensajeArchivo = 'Archivo(s) preparado(s):';           // Ponemos un mensaje
       for (let i = 0; i < event.target.files.length; i++) {       // Recorremos cada uno de los archivos y lo agregamos a nuetsro arreglo
         this.mensajeArchivo += ' ' + event.target.files[i].name;
-        this.archivos.push(event.target.files[i]);
+        this.archivos.push({                                      // Metemos el nuevo archivo en el arreglo
+          archivo: event.target.files[i],
+          url: "",
+          porcentaje: 0
+        });
       }
 
     } else {
@@ -51,22 +55,23 @@ export class PruebaComponent {
     this.loading = true;
 
     // Vamos a esperar a que todo este código termine para continuar con lo demás
-    await Promise.all(this.archivos.map(async (archivo) => {
+    await Promise.all(this.archivos.map(async (file) => {
 
       // Empezamos los trabajos de obtener referencia (link al archivo) y de subir el archivo
-      let referencia = this.storageService.referenciaCloudStorage(archivo.name);
-      let tarea = this.storageService.tareaCloudStorage(archivo.name, archivo);
+      let referencia = this.storageService.referenciaCloudStorage(file.archivo.name);
+      let tarea = this.storageService.tareaCloudStorage(file.archivo.name, file.archivo);
 
       // Nos suscribimos a cambios en el porcentaje
       tarea.percentageChanges().subscribe((porcentaje) => {
-        console.log(`Tarea de ${archivo.name}: ${porcentaje}%`);
+        console.log(`Tarea de ${file.archivo.name}: ${porcentaje}%`);
+        file.porcentaje = porcentaje!;
       });
 
       // Cuando se acabe la tarea, vamos a obtener la URL
       await tarea.then(() => {
-        console.log(`Tarea de ${archivo.name}... ¡¡¡LISTA!!!`)
+        console.log(`Tarea de ${file.archivo.name}... ¡¡¡LISTA!!!`)
         referencia.getDownloadURL().subscribe((URL) => {
-          this.referencias.push(URL);
+          file.url = URL;
         })
       });
 
@@ -74,16 +79,11 @@ export class PruebaComponent {
 
     // Se termino de cargar, desaparece el spinner
     this.archivoForm.reset();
-    this.archivos = [];
     this.loading = false;
+  }
 
-    //Cambia el porcentaje
-    /* tarea.percentageChanges().subscribe((porcentaje) => {
-      this.porcentaje = Math.round(porcentaje!);
-      if (this.porcentaje == 100) {
-        this.finalizado = true;
-      }
-    });*/
+  getPorcentaje(archivo: Archivo) {
+    return `width: ${archivo.porcentaje}%;`;
   }
 
 }

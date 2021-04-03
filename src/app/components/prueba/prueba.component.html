@@ -1,17 +1,22 @@
-<div class="container m-5">
-    <div class="row" *ngIf="!loading else cargando">
+<div class="container my-5">
+    <!-- Cargar los archivos que se van a subir -->
+    <div class="row mt-2" *ngIf="!loading else cargando">
         <div class="col-12 col-lg-4">
             <h3>Subir archivos a Cloud Storage</h3>
+            <!-- Links de descarga a los archivos que acabamos de subir a cloud Storage -->
             <ul>
-                <li *ngFor="let referencia of referencias">
-                    URL de descarga: <a [href]="referencia" target="_blank">Descargar</a>
-                </li>
+                <ng-container *ngFor="let archivo of archivos">
+                    <li *ngIf="archivo.url">
+                        URL de descarga: <a [href]="archivo.url" target="_blank">Descargar</a>
+                    </li>
+                </ng-container>
             </ul>
         </div>
+        <!-- Formulario para elegir el archivo -->
         <div class="col-12 col-lg-8 text-center mt-5">
             <form [formGroup]="archivoForm" (ngSubmit)="subirArchivo()">
                 <div class="form-group">
-                    <input type="file" class="form-control-file" formControlName="archivo" multiple
+                    <input type="file" class="form-control-file" formControlName="archivo" multiple accept="image/*"
                         (change)="cambioArchivo($event)">
                     <span>{{ mensajeArchivo }}</span>
                 </div>
@@ -22,10 +27,19 @@
             </form>
         </div>
     </div>
+    <!-- Spinner de cuando carga la pantalla, junto con barras de progreso para la subida de archivos
+    (FEEDBACK) para que el usuario sepa que esta pasando -->
     <ng-template class="row" #cargando>
         <div class="col text-center">
-            <div class="spinner-grow text-info" role="status">
+            <!-- Spinner de carga -->
+            <div class="spinner-grow text-info my-3" role="status">
                 <span class="sr-only">Loading...</span>
+            </div>
+            <!-- Barra de progreso por cada archivo -->
+            <div class="progress my-3" *ngFor="let archivo of archivos">
+                <div  class="progress-bar" role="progressbar" [style]="getPorcentaje(archivo)">
+                    {{ archivo.archivo.name }}
+                </div> 
             </div>
         </div>
     </ng-template>
