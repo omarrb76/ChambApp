@@ -1,14 +1,17 @@
+/* Componente de ejemplo para demostrar como subir archivos a firebase storage */
+
+import { Observable, Subscription } from 'rxjs';
 import { Archivo } from './../../models/Archivo';
 import { StorageService } from './../../services/firebase/storage.service';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-prueba',
-  templateUrl: './prueba.component.html',
-  styleUrls: ['./prueba.component.css']
+  selector: 'app-upload-files',
+  templateUrl: './upload-files.component.html',
+  styleUrls: ['./upload-files.component.css']
 })
-export class PruebaComponent {
+export class UploadFilesComponent implements OnInit {
 
   // Formulario con el que manejamos la subida de archivos
   public archivoForm = new FormGroup({
@@ -17,13 +20,27 @@ export class PruebaComponent {
 
   // Variables para el control de la vista con el formulario
   mensajeArchivo = 'No hay un archivo seleccionado';
-  loading = false;
+  loading: boolean = false;
+  loading$: Observable<boolean> = null!;
+  subscriptionLoading: Subscription = null!;
 
   // Múltiples archivos, en estos arreglos estarán los archivos y las referencias (links) a ellos
   archivos: Archivo[] = [];
 
   // Usamos el servicio de storage
   constructor(private storageService: StorageService) { }
+
+  // Nos suscribimos al loading del servicio para saber si ha existido algun cambio
+  // es decir, saber si ya se cargaron los archivos
+  ngOnInit(): void {
+    this.loading$ = this.storageService.getLoading$();
+    this.subscriptionLoading = this.loading$.subscribe((loading: boolean) => this.loading = loading);
+  }
+
+  // Nos desuscribimos para que no ocupe recursos
+  ngOnDestroy(): void {
+    this.subscriptionLoading.unsubscribe();
+  }
 
   //Evento que se gatilla cuando el input de tipo archivo cambia
   cambioArchivo(event: any) {
@@ -52,38 +69,12 @@ export class PruebaComponent {
   //Sube el archivo a Cloud Storage, tiene async a lo wey. Pero funciona
   async subirArchivo() {
 
-    this.loading = true;
+    // Le decimos al subject que esta cargando la página
+    this.storageService.setLoading(true);
 
-    // Vamos a esperar a que todo este código termine para continuar con lo demás
-    await Promise.all(this.archivos.map(async (file) => {
-
-      // Empezamos los trabajos de obtener referencia (link al archivo) y de subir el archivo
-      let referencia = this.storageService.referenciaCloudStorage(file.archivo.name);
-      let tarea = this.storageService.tareaCloudStorage(file.archivo.name, file.archivo);
-
-      // Nos suscribimos a cambios en el porcentaje
-      tarea.percentageChanges().subscribe((porcentaje) => {
-        console.log(`Tarea de ${file.archivo.name}: ${porcentaje}%`);
-        file.porcentaje = porcentaje!;
-      });
-
-      // Cuando se acabe la tarea, vamos a obtener la URL
-      await tarea.then(() => {
-        console.log(`Tarea de ${file.archivo.name}... ¡¡¡LISTA!!!`)
-        referencia.getDownloadURL().subscribe((URL) => {
-          file.url = URL;
-        })
-      });
-
-    }));
-
-    // Se termino de cargar, desaparece el spinner
+    // Se termino de cargar reseteamos el formulario
     this.archivoForm.reset();
-    this.loading = false;
-  }
+    this.mensajeArchivo = 'No hay un archivo seleccionado';
 
-  getPorcentaje(archivo: Archivo) {
-    return `width: ${archivo.porcentaje}%;`;
   }
-
 }

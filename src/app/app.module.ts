@@ -14,14 +14,18 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Componentes
 import { AppComponent } from './app.component';
-import { CatsComponent } from './components/cats/cats.component';
-import { PruebaComponent } from './components/prueba/prueba.component';
+import { LoadingFilesComponent } from './components/loading-files/loading-files.component';
+import { UploadFilesComponent } from './components/upload-files/upload-files.component';
+import { FirestoreExampleComponent } from './components/firestore-example/firestore-example.component';
+import { AuthExampleComponent } from './components/auth-example/auth-example.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CatsComponent,
-    PruebaComponent
+    LoadingFilesComponent,
+    UploadFilesComponent,
+    FirestoreExampleComponent,
+    AuthExampleComponent
   ],
   imports: [
     BrowserModule,

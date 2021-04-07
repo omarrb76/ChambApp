@@ -1,3 +1,5 @@
+/* Ejemplo para iniciar sesión con número de teléfono */
+
 import { AuthService } from './../../services/firebase/auth.service';
 import { PhoneNumber } from './../../models/PhoneNumber';
 import { FirestoreService } from './../../services/firebase/firestore.service';
@@ -5,18 +7,18 @@ import { WindowService } from './../../services/window.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-cats',
-  templateUrl: './cats.component.html',
-  styleUrls: ['./cats.component.css']
+  selector: 'app-auth-example',
+  templateUrl: './auth-example.component.html',
+  styleUrls: ['./auth-example.component.css']
 })
-export class CatsComponent implements OnInit {
+export class AuthExampleComponent implements OnInit {
 
   public cats: any;
 
-  windowRef: any;
-  phoneNumber = new PhoneNumber();
-  verificationCode: string = "";
-  user: any;
+  windowRef: any;                   // Referencia de la ventana (necesaria para que funcione el reCapctha)
+  phoneNumber = new PhoneNumber();  // Número de teléfono (propenso a ser borrado)
+  verificationCode: string = "";    // Código de verificación
+  user: any;                        // El usuario que inicio sesión
 
   constructor(
     private firestoreService: FirestoreService,
@@ -36,6 +38,7 @@ export class CatsComponent implements OnInit {
       })
     }); */
 
+    // Obtenemos la referencia de la ventana y dibujamos el reCaptcha
     this.windowRef = this.windowService.getWindowRef();
     this.windowRef.recaptchaVerifier = this.authService.recaptchaVerifier();
     this.windowRef.recaptchaVerifier.render();
@@ -63,4 +66,5 @@ export class CatsComponent implements OnInit {
     })
     .catch((error: any) => console.log(error, 'Incorrect code entered'));
   }
+
 }
