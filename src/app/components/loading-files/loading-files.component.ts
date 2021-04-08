@@ -5,8 +5,8 @@ Se piensa reusar en varias secciones del proyecto */
 
 import { StorageService } from './../../services/firebase/storage.service';
 import { Archivo } from './../../models/Archivo';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 @Component({
   selector: 'app-loading-files',
@@ -18,8 +18,11 @@ export class LoadingFilesComponent implements OnInit {
   // Los archivos nos los van a mandar desde un componente padre
   @Input() files: Archivo[] = [];
 
-  constructor(private storageService: StorageService) {}
-  
+  constructor(
+    private storageService: StorageService,
+    private imageCompress: NgxImageCompressService
+  ) { }
+
   ngOnInit(): void {
     this.subirArchivos();
   }
@@ -35,9 +38,12 @@ export class LoadingFilesComponent implements OnInit {
     // Vamos a esperar a que todo este código termine para continuar con lo demás
     await Promise.all(this.files.map(async (file) => {
 
+      // El archivo con el nuevo tamaño (de ser necesario)
+      const resized = await this.compressFile(file.archivo).then();
+
       // Empezamos los trabajos de obtener referencia (link al archivo) y de subir el archivo
       let referencia = this.storageService.URLCloudStorage(file.archivo.name);
-      let tarea = this.storageService.uploadCloudStorage(file.archivo.name, file.archivo);
+      let tarea = this.storageService.uploadCloudStorage(file.archivo.name, resized);
 
       // Nos suscribimos a cambios en el porcentaje
       tarea.percentageChanges().subscribe((porcentaje) => {
@@ -57,6 +63,56 @@ export class LoadingFilesComponent implements OnInit {
 
     // Termino de cargar
     this.storageService.setLoading(false);
+  }
+
+  // Comprimimos el archivo
+  async compressFile(file: File): Promise<File> {
+
+    // Referencia a la imagen
+    let image: any = "";
+
+    // Leemos la imagen como URL
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    // Promesa, para primero comprimir la imagen y después convertirla en File
+    const promise = new Promise<void>((resolve, reject) => {
+      fileReader.onload = async (event) => {
+        image = event.target?.result!;
+        while ((this.imageCompress.byteCount(image) / 1000) > 500) {
+          const orientation = await this.imageCompress.getOrientation(image).then();
+          await this.imageCompress.compressFile(image, orientation, 50, 50).then(
+            result => {
+              image = result;
+            }
+          );
+        }
+        resolve(); // Se completo la promesa
+      }
+    })
+
+    // Esperamos a la promesa y convertimos la imagen en un File
+    await promise.then();
+    const blob = this.dataURItoBlob(image);
+    return new File([blob], file.name, { type: file.type });
+
+  }
+
+  // No tengo idea de como funciona este código, pero obtiene un archivo
+  // Blob desde la URI que le mandamos
+  dataURItoBlob(dataURI: string) {
+
+    var byteString = atob(dataURI.split(',')[1]);
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
+
   }
 
 }

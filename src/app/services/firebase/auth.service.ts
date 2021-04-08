@@ -1,3 +1,5 @@
+/* Servicio para la autenticacion de firebase */
+
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import firebase from 'firebase/app';

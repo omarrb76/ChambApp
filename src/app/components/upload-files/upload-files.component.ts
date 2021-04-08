@@ -3,7 +3,7 @@
 import { Observable, Subscription } from 'rxjs';
 import { Archivo } from './../../models/Archivo';
 import { StorageService } from './../../services/firebase/storage.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -35,11 +35,6 @@ export class UploadFilesComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.storageService.getLoading$();
     this.subscriptionLoading = this.loading$.subscribe((loading: boolean) => this.loading = loading);
-  }
-
-  // Nos desuscribimos para que no ocupe recursos
-  ngOnDestroy(): void {
-    this.subscriptionLoading.unsubscribe();
   }
 
   //Evento que se gatilla cuando el input de tipo archivo cambia

@@ -1,3 +1,4 @@
+import { OnDestroy } from '@angular/core';
 /* Servicio para acceder al storage de firebase */
 
 import { Injectable } from '@angular/core';
@@ -7,13 +8,17 @@ import { Observable, Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class StorageService {
+export class StorageService implements OnDestroy {
 
   // Observable de que el sitio esta cargando, nos sirve porque vamos a estar 
   // subiendo archivos en varias partes del proyecto, entonces mejor reusamos código
   private loading$ = new Subject<boolean>();
 
   constructor(private storage: AngularFireStorage) { }
+  
+  ngOnDestroy(): void {
+    this.loading$.complete();
+  }
 
   // Conseguimos el observable para aquel componente que lo vaya a consumir
   getLoading$() : Observable<boolean> {

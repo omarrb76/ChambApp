@@ -5,6 +5,9 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+// Servicios de NPM
+import { NgxImageCompressService } from 'ngx-image-compress';
+
 // Angular Firebase
 import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
@@ -31,14 +34,14 @@ import { AuthExampleComponent } from './components/auth-example/auth-example.com
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule
   ],
-  providers: [],
+  providers: [NgxImageCompressService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
