@@ -46,17 +46,11 @@ export class LoadingFilesComponent implements OnInit {
       let tarea = this.storageService.uploadCloudStorage(file.archivo.name, resized);
 
       // Nos suscribimos a cambios en el porcentaje
-      tarea.percentageChanges().subscribe((porcentaje) => {
-        console.log(`Tarea de ${file.archivo.name}: ${porcentaje}%`);
-        file.porcentaje = porcentaje!;
-      });
+      tarea.percentageChanges().subscribe((porcentaje) => file.porcentaje = porcentaje!);
 
       // Cuando se acabe la tarea, vamos a obtener la URL
       await tarea.then(() => {
-        console.log(`Tarea de ${file.archivo.name}... ¡¡¡LISTA!!!`)
-        referencia.getDownloadURL().subscribe((URL) => {
-          file.url = URL;
-        });
+        referencia.getDownloadURL().subscribe((URL) => file.url = URL);
       });
 
     }));
@@ -81,11 +75,7 @@ export class LoadingFilesComponent implements OnInit {
         image = event.target?.result!;
         while ((this.imageCompress.byteCount(image) / 1000) > 500) {
           const orientation = await this.imageCompress.getOrientation(image).then();
-          await this.imageCompress.compressFile(image, orientation, 50, 50).then(
-            result => {
-              image = result;
-            }
-          );
+          await this.imageCompress.compressFile(image, orientation, 50, 50).then(result => image = result);
         }
         resolve(); // Se completo la promesa
       }

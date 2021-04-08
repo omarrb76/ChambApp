@@ -7,11 +7,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-upload-files',
-  templateUrl: './upload-files.component.html',
-  styleUrls: ['./upload-files.component.css']
+  selector: 'app-upload-files-example',
+  templateUrl: './upload-files-example.component.html',
+  styleUrls: ['./upload-files-example.component.css']
 })
-export class UploadFilesComponent implements OnInit {
+export class UploadFilesExampleComponent implements OnInit {
 
   // Formulario con el que manejamos la subida de archivos
   public archivoForm = new FormGroup({
@@ -72,4 +72,5 @@ export class UploadFilesComponent implements OnInit {
     this.mensajeArchivo = 'No hay un archivo seleccionado';
 
   }
+
 }

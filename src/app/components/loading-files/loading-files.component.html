@@ -4,6 +4,9 @@
         <span class="sr-only">Loading...</span>
     </div>
     <!-- Barra de progreso por cada archivo -->
+    <div class="text-center mt-3" *ngIf="files.length > 0">
+        <h3>Cargando archivos</h3>
+    </div>
     <div class="progress my-3" *ngFor="let file of files">
         <div  class="progress-bar" role="progressbar" [style]="getPorcentaje(file)">
             {{ file.archivo.name }}
