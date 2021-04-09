@@ -21,6 +21,7 @@ import { LoadingFilesComponent } from './components/loading-files/loading-files.
 import { FirestoreExampleComponent } from './components/firestore-example/firestore-example.component';
 import { AuthExampleComponent } from './components/auth-example/auth-example.component';
 import { UploadFilesExampleComponent } from './components/upload-files-example/upload-files-example.component';
+import { MenuExampleComponent } from './components/menu-example/menu-example.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { UploadFilesExampleComponent } from './components/upload-files-example/u
     LoadingFilesComponent,
     FirestoreExampleComponent,
     AuthExampleComponent,
-    UploadFilesExampleComponent
+    UploadFilesExampleComponent,
+    MenuExampleComponent
   ],
   imports: [
     BrowserModule,

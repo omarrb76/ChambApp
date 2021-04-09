@@ -18,10 +18,10 @@
                 <div class="form-group">
                     <input type="file" class="form-control-file" formControlName="archivo" multiple accept="image/*"
                         (change)="cambioArchivo($event)">
-                    <span>{{ mensajeArchivo }}</span>
+                    <span [class.text-danger]="error">{{ mensajeArchivo }}</span>
                 </div>
                 <hr>
-                <button class="btn btn-success btn-block mt-2" [disabled]="!archivoForm.valid">
+                <button class="btn btn-success btn-block mt-2" [disabled]="getDisabled()">
                     Subir archivo
                 </button>
             </form>

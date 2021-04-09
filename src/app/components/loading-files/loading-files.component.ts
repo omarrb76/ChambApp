@@ -18,12 +18,15 @@ export class LoadingFilesComponent implements OnInit {
   // Los archivos nos los van a mandar desde un componente padre
   @Input() files: Archivo[] = [];
 
+  log: string = "";
+
   constructor(
     private storageService: StorageService,
     private imageCompress: NgxImageCompressService
   ) { }
 
   ngOnInit(): void {
+    this.storageService.getLog$().subscribe(log => this.log = log);
     this.subirArchivos();
   }
 
@@ -50,17 +53,21 @@ export class LoadingFilesComponent implements OnInit {
 
       // Cuando se acabe la tarea, vamos a obtener la URL
       await tarea.then(() => {
+        this.storageService.setLog$('Obteniendo URL de ' + file.archivo.name);
         referencia.getDownloadURL().subscribe((URL) => file.url = URL);
       });
 
     }));
 
     // Termino de cargar
-    this.storageService.setLoading(false);
+    this.storageService.setLoading$(false);
   }
 
   // Comprimimos el archivo
   async compressFile(file: File): Promise<File> {
+
+    // Informamos que estamos haciendo
+    this.storageService.setLog$('Comprimiendo imagen: ' + file.name);
 
     // Referencia a la imagen
     let image: any = "";
@@ -83,6 +90,10 @@ export class LoadingFilesComponent implements OnInit {
 
     // Esperamos a la promesa y convertimos la imagen en un File
     await promise.then();
+
+    // Informamos en el log
+    this.storageService.setLog$('Creando archivo de ' + file.name);
+
     const blob = this.dataURItoBlob(image);
     return new File([blob], file.name, { type: file.type });
 

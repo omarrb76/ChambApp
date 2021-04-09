@@ -1,6 +1,5 @@
 /* Componente de ejemplo para demostrar como subir archivos a firebase storage */
 
-import { Observable, Subscription } from 'rxjs';
 import { Archivo } from './../../models/Archivo';
 import { StorageService } from './../../services/firebase/storage.service';
 import { Component, OnInit } from '@angular/core';
@@ -21,8 +20,7 @@ export class UploadFilesExampleComponent implements OnInit {
   // Variables para el control de la vista con el formulario
   mensajeArchivo = 'No hay un archivo seleccionado';
   loading: boolean = false;
-  loading$: Observable<boolean> = null!;
-  subscriptionLoading: Subscription = null!;
+  error: boolean = false;
 
   // Múltiples archivos, en estos arreglos estarán los archivos y las referencias (links) a ellos
   archivos: Archivo[] = [];
@@ -33,16 +31,22 @@ export class UploadFilesExampleComponent implements OnInit {
   // Nos suscribimos al loading del servicio para saber si ha existido algun cambio
   // es decir, saber si ya se cargaron los archivos
   ngOnInit(): void {
-    this.loading$ = this.storageService.getLoading$();
-    this.subscriptionLoading = this.loading$.subscribe((loading: boolean) => this.loading = loading);
+    this.storageService.getLoading$().subscribe((loading: boolean) => this.loading = loading);
   }
 
   //Evento que se gatilla cuando el input de tipo archivo cambia
   cambioArchivo(event: any) {
 
     // Si el usuario eligió archivos
-    if (event.target.files.length > 0) {
+    if (event.target.files.length > 5) {                          // Si el usuario seleccionó más de 5 archivos
 
+      this.mensajeArchivo = 'Máximo selecciona 5 archivos';
+      this.error = true;
+
+    } else if (event.target.files.length > 0) {
+
+      this.archivos = [];                                         // Vaciamos los archivos (por si ya hubiera unos cargados)
+      this.error = false;                                         // Ponemos el error en falso para que no se marque de rojo
       this.mensajeArchivo = 'Archivo(s) preparado(s):';           // Ponemos un mensaje
       for (let i = 0; i < event.target.files.length; i++) {       // Recorremos cada uno de los archivos y lo agregamos a nuetsro arreglo
         this.mensajeArchivo += ' ' + event.target.files[i].name;
@@ -65,12 +69,18 @@ export class UploadFilesExampleComponent implements OnInit {
   async subirArchivo() {
 
     // Le decimos al subject que esta cargando la página
-    this.storageService.setLoading(true);
+    this.storageService.setLoading$(true);
 
     // Se termino de cargar reseteamos el formulario
     this.archivoForm.reset();
     this.mensajeArchivo = 'No hay un archivo seleccionado';
+    this.error = false;
 
+  }
+
+  // Devuelve si el boton de subir archivo debe de estar acticado o no
+  getDisabled(): boolean {
+    return !this.archivoForm.valid || this.error;
   }
 
 }
