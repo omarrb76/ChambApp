@@ -16,13 +16,14 @@ export class FirestoreExampleComponent implements OnInit {
   error: string = "";
   loading: boolean = false;
   modoEdicion: boolean = false;
+  id: string = ""; // Guardamos el id de la tarea que quiera editar o borrar
 
   constructor(private firestore: FirestoreService) { }
 
   ngOnInit(): void {
     // Conseguimos las tareas
     this.firestore.getTareas().subscribe(res => {
-      res.docs.forEach((doc: any) => this.tareas.push({ id: doc.id, tarea: doc.data().tarea }));
+      res.docs.forEach((doc: any) => this.tareas.push({ id: doc.id, ...doc.data() }));
     });
   }
 
@@ -37,13 +38,25 @@ export class FirestoreExampleComponent implements OnInit {
     // Esta cargando
     this.loading = true;
 
+    // Obtenemos la fecha, ya que en el if lo usamos
+    const fecha = Date.now();
+
     if (this.modoEdicion) {
-      console.log('hola');
+
+      // Editamos la tarea y también el vector de tareas
+      await this.firestore.updateTarea({ id: this.id, tarea: this.tarea, fecha: fecha });
+      this.tareas = this.tareas.map(item => (
+        item.id == this.id ? { id: item.id, tarea: this.tarea, fecha: fecha } : item
+      ));
+
     } else {
-      const nueva = await this.firestore.putTarea({ tarea: this.tarea }).then((res: any) =>
-        ({ id: res.id, tarea: this.tarea })
+
+      // Creamos una nueva tarea y la agregamos al vector
+      const nueva = await this.firestore.putTarea({ tarea: this.tarea, fecha: fecha }).then((res: any) =>
+        ({ id: res.id, tarea: this.tarea, fecha: fecha })
       );
       this.tareas = [...this.tareas, nueva];
+
     }
 
     // Termino de subirse la nueva tarea, agregamos el nuevo archivo y permitimos que los
@@ -51,29 +64,24 @@ export class FirestoreExampleComponent implements OnInit {
     this.loading = false;
     this.tarea = "";
     this.error = "";
+    this.modoEdicion = false;
+    this.id = "";
   }
 
-  /* const editarTareaForm {
-    if (!this.tarea.trim()) {
-      this.error = 'Escriba algo por favor';
-      console.log('Elemento vacío');
-      return;
-    }
-
-    const arrayEditado = tareas.map(
-      item => item.id === id ? { id: id, tarea: tarea } : item
-    );
-    setTareas(arrayEditado);
-    setModoEdicion(false);
-    setTarea('');
-    setError(null);
-  }*/
-
+  // Conseguimos información acerca de la tarea que queremos editar
   editarTarea(tarea: any) {
-
+    this.modoEdicion = true;
+    this.tarea = tarea.tarea;
+    this.id = tarea.id;
   }
 
-  eliminarTarea(tarea: any) {
+  // Conseguimos la tarea que queremos eliminar
+  async eliminarTarea(id: string) {
+
+    this.loading = true;
+    await this.firestore.deleteTarea(id);
+    this.tareas = this.tareas.filter(item => item.id != id);
+    this.loading = false;
 
   }
 
