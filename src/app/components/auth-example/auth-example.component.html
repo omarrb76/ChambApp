@@ -2,29 +2,26 @@
     <div class="row" [hidden]="user">
         <div class="col">
             <h1>Sign In With Your Phone Number</h1>
-            <label for="phone mx-2">Phone Number</label>
-            <div class="form-inline my-3">
-                <input type="text" [(ngModel)]="phoneNumber.country" class="form-control mx-2" placeholder="XX"
-                    maxlength="2">
-                <input type="text" [(ngModel)]="phoneNumber.area" class="form-control mx-2" placeholder="XXX"
-                    maxlength="3">
-                <input type="text" [(ngModel)]="phoneNumber.prefix" class="form-control mx-2" placeholder="XXX"
-                    maxlength="3">
-                <input type="text" [(ngModel)]="phoneNumber.line" class="form-control mx-2" placeholder="XXXX"
-                    maxlength="4">
-            </div>
+            <form [formGroup]="phoneNumber" (ngSubmit)="sendLoginCode()">
+                <label for="phone">Phone Number</label>
+                <input type="text" formControlName="number" id="phone" (keyup)="keyUp()" class="form-control mb-2"
+                    autocomplete="off" [class.is-invalid]="!phoneNumber.valid" [class.is-valid]="phoneNumber.valid"
+                    placeholder="Phone Number">
+                <span class="text-danger">{{error}}</span>
 
-            <div class="text-center">
-                <div id="recaptcha-container" class="d-inline-block"></div>
-            </div>
+                <div class="text-center">
+                    <div id="recaptcha-container" class="d-inline-block"></div>
+                </div>
 
-            <button class="btn btn-primary btn-block mt-2" (click)="sendLoginCode()" id="send-sms-number" disabled>SMS Text Login Code</button>
+                <button class="btn btn-primary btn-block mt-2" type="submit" id="send-sms-number" disabled>SMS Text
+                    Login Code</button>
+            </form>
 
             <div *ngIf="windowRef.confirmationResult" class="mt-2">
                 <div class="form-group">
                     <label for="code">Enter Your Verification Code Here</label><br>
                     <input name="code" [(ngModel)]="verificationCode" type="text" class="form-control"
-                        placeholder="Verification Code">
+                        placeholder="Verification Code" autocomplete="off">
                 </div>
                 <button class="btn btn-success btn-block" (click)="verifyLoginCode()">Verify</button>
             </div>
