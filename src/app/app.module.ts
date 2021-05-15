@@ -22,6 +22,10 @@ import { FirestoreExampleComponent } from './components/firestore-example/firest
 import { AuthExampleComponent } from './components/auth-example/auth-example.component';
 import { UploadFilesExampleComponent } from './components/upload-files-example/upload-files-example.component';
 import { MenuExampleComponent } from './components/menu-example/menu-example.component';
+import { HomeComponent } from './components/home/home.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { FaqComponent } from './components/faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,11 @@ import { MenuExampleComponent } from './components/menu-example/menu-example.com
     FirestoreExampleComponent,
     AuthExampleComponent,
     UploadFilesExampleComponent,
-    MenuExampleComponent
+    MenuExampleComponent,
+    HomeComponent,
+    NavbarComponent,
+    FooterComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,
