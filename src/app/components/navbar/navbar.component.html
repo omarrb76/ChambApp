@@ -1,11 +1,30 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-verde">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-        aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+
+    <!-- Boton hamburguesa -->
+    <button 
+        class="d-lg-none hamburguesa"
+        type="button" 
+        data-toggle="collapse"
+        data-target="#navbarTogglerDemo01"
+        aria-controls="navbarTogglerDemo01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+    >
+        <i class="fas fa-caret-down"></i>
     </button>
-    <a class="navbar-brand" [routerLink]="['home']"><img src="../../../assets/img/logo_small_icon_only_inverted.png"
-        alt="Logo de ChambApp" class="logo hover-invertida"></a>
+
+    <!-- Este boton aparece cuando es chiquito -->
+    <a class="navbar-brand d-inline d-lg-none" [routerLink]="['home']">
+        <img src="../../../assets/img/logo_white_large.png" alt="Logo de ChambApp" class="logo-collapse my-auto">
+    </a>
+
+    <!-- Links del navbar -->
     <div class="collapse navbar-collapse text-center" id="navbarTogglerDemo01">
+
+        <!-- Este boton aparece cuando es grande -->
+        <a class="navbar-brand d-none d-lg-inline" [routerLink]="['home']">
+            <img src="../../../assets/img/logo_small_icon_only_inverted.png" alt="Logo de ChambApp" class="logo">
+        </a>    
         
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item text-center">
@@ -15,5 +34,6 @@
                 <a class="nav-link" [routerLink]="['faq']">Crear una cuenta</a>
             </li>
         </ul>
+
     </div>
 </nav>

@@ -1,3 +1,70 @@
+html,
+body,
+app-root {
+    height: 100%;
+}
+
+app-root {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1 0 auto;
+    padding: 20px;
+}
+
+app-footer {
+    flex-shrink: 0;
+}
+/* La seccion de arriba es para que el footer siempre este hasta abajo */
+
 .pointer {
     cursor: pointer;
+}
+
+.bg-verde {
+    background-color: #51BE95;
+}
+
+/* Tamaño del logo cuando el navbar es grande */
+.logo {
+    max-width: 50px;
+}
+
+/* Tamaño del logo cuando el navbar es pequeño */
+.logo-collapse {
+    max-width: 110px;
+}
+
+/* Boton para el menu hamburguesa del navbar */
+.hamburguesa {
+    max-width: 30px;
+    max-height: 30px;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.text-verde {
+    color: #51BE95;
+}
+
+.text-verde:hover {
+    color: #367e62;
+}
+
+/* Los iconos del footer se hacen mas grande en pantalla medium */
+.icono {
+    font-size:1.3rem;
+}
+
+/* Bootstrap md, hace mas grande el icono a partir de md */
+@media (min-width: 768px) {  
+    .icono {
+        font-size:1.5rem;
+    }
 }
