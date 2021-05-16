@@ -13,21 +13,97 @@
             <p>Crea una cuenta para tener acceso a miles de negocios cerca de ti
                 o inicia sesión <a (click)="navigate('login')" class="text-verde pointer">aquí</a>
             </p>
+            <p>Tus datos son privados y no son compartidos con nadie. Es seguro llenar
+                la información solicitada.
+            </p>
         </div>
     </div>
 
-    <form [formGroup]="signUpForm" (ngSubmit)="submitForm()">
+    <!-- Formulario -->
+    <form [formGroup]="signUpForm" (ngSubmit)="submitForm()" class="row">
+
+        <!-- Dividiremos en pasos el registro, para no abrumar al usuario -->
+        <ng-container [ngSwitch]="step">
+
+            <!-- Paso 1: Nombre, Apellido, Estado -->
+            <ng-container *ngSwitchCase="0">
+
+                <!-- Nombre -->
+                <div class="form-group">
+                    <label for="nombre">Nombre(s)</label>
+                    <input type="text" formControlName="nombre" id="nombre" (keyup)="keyUp()" class="form-control mb-2"
+                        autocomplete="off" [class.is-invalid]="!nombre.valid && editado"
+                        [class.is-valid]="nombre.valid && editado" placeholder="Escribe tu nombre aquí" required>
+                </div>
+
+                <!-- Apellido -->
+                <div class="form-group">
+                    <label for="apellido">Apellido(s)</label>
+                    <input type="text" formControlName="apellido" id="apellido" (keyup)="keyUp()"
+                        class="form-control mb-2" autocomplete="off" [class.is-invalid]="!apellido.valid && editado"
+                        [class.is-valid]="apellido.valid && editado" placeholder="Escribe tu nombre aquí" required>
+                </div>
+
+                <!-- Estado -->
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select name="estado" id="estado" formControlName="estado" class="form-control mb-3" required>
+                        <option *ngFor="let estado of estados" [value]="estado">{{estado}}</option>
+                    </select>
+                </div>
+
+            </ng-container>
+
+            <ng-container *ngSwitchCase="1">
+
+            </ng-container>
+
+            <ng-container *ngSwitchCase="2">
+
+            </ng-container>
+
+            <div class="col" *ngIf="step > 0">
+                <button type="button" class="btn btn-secondary btn-block">
+                    Anterior
+                </button>
+            </div>
+            <div class="col" *ngIf="step < 2">
+                <button type="button" class="btn btn-success btn-block">
+                    Siguiente
+                </button>
+            </div>
+
+        </ng-container>
+
+
+
+        <!-- Fecha de Nacimiento -->
         <div class="form-group">
-            <label for="nombre">Nombre(s)</label>
-            <input type="text" formControlName="nombre" id="nombre" (keyup)="keyUp()" class="form-control mb-2"
-                autocomplete="off" [class.is-invalid]="!nombre.valid && editado" [class.is-valid]="nombre.valid && editado"
-                placeholder="Escribe tu nombre aquí">
+            <label for="fecha">Fecha de Nacimiento</label>
+            <input type="date" formControlName="fecha" id="fecha" class="form-control mb-2" max="2008-01-01"
+                min="1930-01-01" required>
         </div>
+
+
+
+        <!-- Género -->
         <div class="form-group">
-            <label for="apellido">Apellido(s)</label>
-            <input type="text" formControlName="apellido" id="apellido" (keyup)="keyUp()" class="form-control mb-2"
-                autocomplete="off" [class.is-invalid]="!apellido.valid && editado" [class.is-valid]="apellido.valid && editado"
-                placeholder="Escribe tu nombre aquí">
+            <label>Género</label>
+            <div class="form-check">
+                <input formControlName="genero" class="form-check-input" type="radio" name="genero" id="masculino"
+                    value="m" required>
+                <label class="form-check-label" for="masculino">
+                    Masculino
+                </label>
+            </div>
+            <div class="form-check">
+                <input formControlName="genero" class="form-check-input" type="radio" name="genero" id="femenino"
+                    value="f" required>
+                <label class="form-check-label" for="femenino">
+                    Femenino
+                </label>
+            </div>
+            {{ signUpForm.value | json }}
         </div>
     </form>
 

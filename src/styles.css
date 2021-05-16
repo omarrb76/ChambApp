@@ -24,7 +24,7 @@ app-footer {
 }
 
 .bg-verde {
-    background-color: #51BE95;
+    background-color: #51BE95 !important;
 }
 
 /* Tamaño del logo cuando el navbar es grande */
@@ -67,4 +67,37 @@ app-footer {
     .icono {
         font-size:1.5rem;
     }
+}
+
+/* Para que el radio boton se vea de color verde */
+input[type='radio']:after {
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #d1d3d1;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
+
+input[type='radio']:checked:after {
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #51BE95;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #8064A2 !important;
 }
