@@ -44,8 +44,8 @@
 
                 <span *ngIf="error" class="text-danger">{{error}}</span>
 
-                <input type="text" class="form-control mb-2" placeholder="Ingrese Tarea" 
-                [(ngModel)]="tarea" name="x" autocomplete="off"/>
+                <input type="text" class="form-control mb-2" placeholder="Ingrese Tarea" [(ngModel)]="tarea" name="x"
+                    autocomplete="off" />
 
                 <button *ngIf="modoEdicion" class="btn btn-warning btn-block" type="submit" [disabled]="loading">
                     Editar tarea

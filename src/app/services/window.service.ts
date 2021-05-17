@@ -3,12 +3,12 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class WindowService {
 
-  public getWindowRef() {
-    return window;
-  }
+    public getWindowRef() {
+        return window;
+    }
 
 }
