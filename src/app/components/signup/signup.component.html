@@ -138,7 +138,7 @@
                 <div class="form-group">
                     <label for="telefono">Teléfono (10 dígitos)</label>
                     <input type="text" formControlName="telefono" id="telefono" (keyup)="keyUp('telefono')"
-                        class="form-control mb-2" autocomplete="off"
+                        maxlength="10" class="form-control mb-2" autocomplete="off"
                         [class.is-invalid]="!telefono.valid && telefonoEditado"
                         [class.is-valid]="telefono.valid && telefonoEditado"
                         placeholder="Escribe tu número de teléfono aquí" required>
@@ -165,9 +165,11 @@
                     <!-- SMS -->
                     <div class="form-group">
                         <label for="code">Código SMS</label>
-                        <input type="text" formControlName="code" id="code" (keyup)="keyUp('code')"
-                            class="form-control mb-2" autocomplete="off" [class.is-invalid]="!code.valid && codeEditado"
+                        <input type="text" formControlName="code" id="code" (keyup)="keyUp('code')" maxlength="6"
+                            class="form-control mb-2" autocomplete="off"
+                            [class.is-invalid]="!code.valid && codeEditado || error"
                             [class.is-valid]="code.valid && codeEditado" placeholder="Escribe tu código aquí" required>
+                        <span class="text-danger">{{error}}</span>
                     </div>
 
                 </form>
@@ -226,17 +228,5 @@
         </small>
 
     </form>
-
-    <div class="row">
-        <div *ngIf="user">
-
-            You have succesfuly logged in with your phone Number
-
-            <br>
-
-            UserId: {{ user?.uid }}
-
-        </div>
-    </div>
 
 </div>

@@ -17,7 +17,7 @@ export class NavbarComponent implements OnInit {
         private authService: AuthService
     ) { }
 
-    // A diferencia de las otras páginas, aqui nos suscribimos, ya que el navbar siempre esta presente
+    // Nos suscribimos, ya que el navbar siempre esta presente
     ngOnInit(): void {
         this.authService.getUsuarioConectado().subscribe((user: any) => {
             if (user) { this.user = user; }
@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
 
     // Función para que se cierre el menú hamburguesa cuando esta chiquito
     toogle(button: any) {
-        if (window.screen.width < 992) { button.click(); }
+        if (window.innerWidth < 992) { button.click(); }
     }
 
     // Cerrar sesión

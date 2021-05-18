@@ -1,3 +1,4 @@
+import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FaqComponent } from './components/faq/faq.component';
 import { HomeComponent } from './components/home/home.component';
@@ -10,6 +11,7 @@ import { AuthExampleComponent } from './components/auth-example/auth-example.com
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'upload-files', component: UploadFilesExampleComponent },
   { path: 'firestore', component: FirestoreExampleComponent },

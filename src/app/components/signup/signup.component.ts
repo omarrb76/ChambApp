@@ -25,6 +25,7 @@ export class SignupComponent implements OnInit {
     codeForm: any = null!;      // Formulario para colocar SMS del teléfono
     estados = estados;          // Los estados de México
     step: number = 0;           // El paso en el que vamos [0 => nombre, apellido, estado | 1 => fecha de nacimiento, genero, nombre de usuario, tipo de usuario | 2 => telefono | 3 => confirmar telefono ]
+    error: string = "";         // Mostramos un mensaje de error si se equivoco en el código de SMS
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
@@ -69,8 +70,8 @@ export class SignupComponent implements OnInit {
 
     // Si hay un usuario activo, no deberia de estar en esta página
     ngOnInit(): void {
-        this.authService.getUsuarioConectado().toPromise().then((user: any) => {
-            if (user) { this.authService.navigate('signup'); }
+        this.authService.getUsuarioConectado().subscribe((user: any) => {
+            if (user) { this.authService.navigate('home'); }
         });
     }
 
@@ -106,9 +107,15 @@ export class SignupComponent implements OnInit {
             this.windowRef.confirmationResult
                 .confirm(this.code.value)
                 .then((result: any) => {
+                    this.navigate('home');
                     console.log('Inicio sesion correctamente');
                 })
-                .catch((error: any) => console.log(error, 'Incorrect code entered'));
+                .catch((error: any) => {
+                    if (error.code == 'auth/invalid-verification-code') {
+                        this.error = "El código ingresado es incorrecto.";
+                    }
+                    console.log(error, 'Incorrect code entered')
+                });
         }
 
     }
@@ -159,7 +166,7 @@ export class SignupComponent implements OnInit {
                 this.windowRef = this.windowService.getWindowRef();
                 this.windowRef.recaptchaVerifier = this.authService.recaptchaVerifier();
                 this.windowRef.recaptchaVerifier.render();
-            }, 0)
+            }, 0);
         }
 
     }
