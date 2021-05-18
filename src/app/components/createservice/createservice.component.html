@@ -1,0 +1,109 @@
+<div class="container mt-5 pt-3 pt-lg-4">
+
+    <!-- Titulo (header) -->
+    <div class="row">
+        <div class="col">
+            <h3>Datos de tu servicio</h3>
+        </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="row">
+        <div class="col">
+            <p>
+                Llena la siguiente información para mostrar tu servicio a otros usuarios de ChambApp.
+                <br>
+                Esta información podrá ser visualizada por otros usuarios de ChambApp.
+            </p>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Formulario -->
+    <form [formGroup]="serviceForm" (ngSubmit)="submitServiceForm()">
+
+        <!-- Dividiremos en pasos el registro, para no abrumar al usuario -->
+        <ng-container [ngSwitch]="step">
+
+            <!-- Paso 1: Nombre del servicio, descripción del servicio, tags -->
+            <ng-container *ngSwitchCase="0">
+
+                <!-- Nombre -->
+                <div class="form-group">
+                    <label for="nombre">Nombre de tu servicio</label>
+                    <input type="text" formControlName="nombre" id="nombre" (keyup)="keyUp('nombre')"
+                        class="form-control mb-2" autocomplete="off" [class.is-invalid]="!nombre.valid && nombreEditado"
+                        [class.is-valid]="nombre.valid && nombreEditado" placeholder="Escribe tu nombre aquí" required>
+                </div>
+
+                <!-- Descripción del servicio -->
+                <div class="form-group">
+                    <label for="descripcion">Describe tu servicio</label>
+                    <textarea class="form-control mb-2" formControlName="descripcion" id="descripcion"
+                        (keyup)="keyUp('descripcion')" rows="3"
+                        [class.is-invalid]="!descripcion.valid && descripcionEditado"
+                        [class.is-valid]="descripcion.valid && descripcionEditado"
+                        placeholder="Describe tu servicio aquí" required>
+                    </textarea>
+                </div>
+
+            </ng-container>
+
+            <!-- Paso 2: Horario -->
+            <ng-container *ngSwitchCase="1">
+
+                <!-- Dias de la semana (cuando se le da click, aparece mas informacion) -->
+                <div class="form-row align-items-center">
+                    <div class="col mb-2" *ngFor="let dia of dias">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="dia" (click)="agregarRemoverDia(dia)"
+                                checked>
+                            <label class="custom-control-label" [for]="dia">
+                                <h5>{{ primerLetra(dia) }}</h5>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </ng-container>
+
+            <!-- Paso 3: fotos -->
+            <ng-container *ngSwitchCase="2">
+
+                <p>Por último, incluye fotos de tu servicio para que la gente conozca tus resultados.</p>
+
+            </ng-container>
+
+            <!-- Botones de siguiente y anterior -->
+            <div class="row">
+
+                <!-- Anterior -->
+                <div class="col" *ngIf="step > 0" (click)="cambiarPaso(false)">
+                    <button type="button" class="btn btn-secondary btn-block">
+                        Anterior
+                    </button>
+                </div>
+
+                <!-- Siguiente -->
+                <div class="col" *ngIf="step < 2">
+                    <button type="button" class="btn btn-success btn-block" (click)="cambiarPaso(true)"
+                        [disabled]="!signUpFormDisabled">
+                        Siguiente
+                    </button>
+                </div>
+
+                <!-- Confirmar datos -->
+                <div class="col" *ngIf="step == 2">
+                    <button class="btn btn-success btn-block" type="submit" id="submit-button" disabled>
+                        Aceptar
+                    </button>
+                </div>
+
+            </div>
+
+        </ng-container>
+
+    </form>
+
+</div>

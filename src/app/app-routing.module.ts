@@ -1,3 +1,4 @@
+import { CreateserviceComponent } from './components/createservice/createservice.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FaqComponent } from './components/faq/faq.component';
@@ -11,6 +12,7 @@ import { AuthExampleComponent } from './components/auth-example/auth-example.com
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'create-service', component: CreateserviceComponent },
   { path: 'login', component: LoginComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'upload-files', component: UploadFilesExampleComponent },

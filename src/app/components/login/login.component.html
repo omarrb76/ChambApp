@@ -15,6 +15,8 @@
         </div>
     </div>
 
+    <hr>
+
     <!-- Formulario -->
     <form [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
 
@@ -58,7 +60,8 @@
                     <div class="form-group">
                         <label for="code">Código SMS</label>
                         <input type="text" formControlName="code" id="code" (keyup)="keyUp('code')" maxlength="6"
-                            class="form-control mb-2" autocomplete="off" [class.is-invalid]="!code.valid && codeEditado || error"
+                            class="form-control mb-2" autocomplete="off"
+                            [class.is-invalid]="!code.valid && codeEditado || error"
                             [class.is-valid]="code.valid && codeEditado" placeholder="Escribe tu código aquí" required>
                         <span class="text-danger">{{error}}</span>
                     </div>

@@ -107,8 +107,14 @@ export class SignupComponent implements OnInit {
             this.windowRef.confirmationResult
                 .confirm(this.code.value)
                 .then((result: any) => {
-                    this.navigate('home');
                     console.log('Inicio sesion correctamente');
+
+                    if (this.tipo.value == 's') {
+                        this.navigate('create-service');
+                    } else {
+                        this.navigate('home');
+                    }
+                    
                 })
                 .catch((error: any) => {
                     if (error.code == 'auth/invalid-verification-code') {
