@@ -22,14 +22,16 @@ export class SignupComponent implements OnInit {
 
     windowRef: any;             // Referencia de la ventana (necesaria para que funcione el reCapctha)
     signUpForm: any = null!;    // Formulario de crear cuenta
+    codeForm: any = null!;      // Formulario para colocar SMS del teléfono
     estados = estados;          // Los estados de México
-    step: number = 0;           // El paso en el que vamos [0 => nombre, apellido, estado | 1 => fecha de nacimiento, genero, nombre de usuario, tipo de usuario | 2 => telefono, confirmar telefono ]
+    step: number = 0;           // El paso en el que vamos [0 => nombre, apellido, estado | 1 => fecha de nacimiento, genero, nombre de usuario, tipo de usuario | 2 => telefono | 3 => confirmar telefono ]
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
     apellidoEditado: boolean = false;
     usernameEditado: boolean = false;
     telefonoEditado: boolean = false;
+    codeEditado: boolean = false;
 
     constructor(
         private router: Router,
@@ -59,17 +61,56 @@ export class SignupComponent implements OnInit {
             telefono: new FormControl(null, [Validators.required, Validators.pattern('[0-9]{10}')])
         });
 
+        this.codeForm = new FormGroup({
+            code: new FormControl(null, [Validators.required, Validators.pattern('[0-9]{6}')])
+        });
+
     }
 
-    ngOnInit(): void { }
+    // Si hay un usuario activo, no deberia de estar en esta página
+    ngOnInit(): void {
+        this.authService.getUsuarioConectado().toPromise().then((user: any) => {
+            if (user) { this.authService.navigate('signup'); }
+        });
+    }
 
     // Navegamos al link indicado
     navigate(link: string) {
         this.router.navigate([link]);
     }
 
-    submitForm() {
-        console.log('Fomrulario enviado');
+    // Es llamado cuando se envía el formulario completo
+    submitSignUpForm() {
+
+        // Lo único que no puedo verificar antes de envíar el formulario es el teléfono, pero eso se arregla con el if de abajo
+        if (this.signUpForm.valid) {
+
+            const appVerifier = this.windowRef.recaptchaVerifier;
+            const num = '+52' + this.telefono.value;
+
+            this.authService.signInWithPhoneNumber(num, appVerifier)
+                .then(result => {
+                    this.windowRef.confirmationResult = result;
+                    this.step++;
+                })
+                .catch(error => console.log(error));
+
+        } else { this.telefonoEditado = true; }
+
+    }
+
+    // Es llamado para enviar el código de SMS
+    submitCodeForm() {
+
+        if (this.codeForm.valid) {
+            this.windowRef.confirmationResult
+                .confirm(this.code.value)
+                .then((result: any) => {
+                    console.log('Inicio sesion correctamente');
+                })
+                .catch((error: any) => console.log(error, 'Incorrect code entered'));
+        }
+
     }
 
     // Función que se manda a llamar para ver si un campo fue editado
@@ -79,6 +120,7 @@ export class SignupComponent implements OnInit {
             case 'apellido': this.apellidoEditado = true; break;
             case 'username': this.usernameEditado = true; break;
             case 'telefono': this.telefonoEditado = true; break;
+            case 'code': this.codeEditado = true; break;
         }
     }
 
@@ -91,6 +133,7 @@ export class SignupComponent implements OnInit {
     get username() { return this.signUpForm.get('username'); }
     get tipo() { return this.signUpForm.get('tipo'); }
     get telefono() { return this.signUpForm.get('telefono'); }
+    get code() { return this.codeForm.get('code'); }
 
     // Get que nos permite desactivar los botones si los campos no son válidos
     get signUpFormDisabled() {
@@ -98,6 +141,7 @@ export class SignupComponent implements OnInit {
             case 0: return this.nombre.valid && this.apellido.valid && this.estado.valid;
             case 1: return this.fecha.valid && this.genero.valid && this.username.valid && this.tipo.valid;
             case 2: return false;
+            case 3: return this.code.valid;
             default: return false;
         }
     }

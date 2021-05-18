@@ -2,6 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
@@ -10,10 +11,22 @@ import 'firebase/auth';
 })
 export class AuthService {
 
-    constructor(private auth: AngularFireAuth) {
+    constructor(
+        private auth: AngularFireAuth,
+        private router: Router
+    ) {
+
         this.auth.useDeviceLanguage(); // Ajusta el lenguaje para que cada persona lo vea segun su idioma
+
     }
 
+    // GETS Y SETS
+    getUsuarioConectado() { return this.auth.user; }
+
+    // Navegamos al link
+    navigate(link: string) { this.router.navigate([link]); }
+
+    // Crea el recaptcha en pantalla con el div (id) epecificado
     public recaptchaVerifier() {
         const boton = <HTMLInputElement>document.getElementById("submit-button");
         return new firebase.auth.RecaptchaVerifier('recaptcha-container', {
@@ -27,7 +40,13 @@ export class AuthService {
         });
     }
 
+    // Crear cuenta con numero de telefono
     signInWithPhoneNumber(num: string, appVerifier: any) {
         return this.auth.signInWithPhoneNumber(num, appVerifier);
+    }
+
+    // Cerramos sesion
+    logout() {
+        this.auth.signOut();
     }
 }

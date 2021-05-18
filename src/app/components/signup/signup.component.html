@@ -22,7 +22,7 @@
     <hr>
 
     <!-- Formulario -->
-    <form [formGroup]="signUpForm" (ngSubmit)="submitForm()">
+    <form [formGroup]="signUpForm" (ngSubmit)="submitSignUpForm()">
 
         <!-- Dividiremos en pasos el registro, para no abrumar al usuario -->
         <ng-container [ngSwitch]="step">
@@ -129,7 +129,7 @@
 
             </ng-container>
 
-            <!-- Paso 3: telefono, confirmar telefono -->
+            <!-- Paso 3: telefono -->
             <ng-container *ngSwitchCase="2">
 
                 <p>Por último, ingresa tu teléfono. Este te servira para crear tu cuenta mediante SMS.</p>
@@ -151,6 +151,26 @@
                 <div class="text-center mb-2">
                     <div id="recaptcha-container" class="d-inline-block"></div>
                 </div>
+
+            </ng-container>
+
+            <!-- Paso 4: confirmar telefono SMS -->
+            <ng-container *ngSwitchCase="3">
+
+                <p>Un código fue te fue enviado por SMS, ingresalo en el siguiente campo.</p>
+
+                <!-- Formulario para confirmar SMS -->
+                <form [formGroup]="codeForm" (ngSubmit)="submitCodeForm()" id="codeForm">
+
+                    <!-- SMS -->
+                    <div class="form-group">
+                        <label for="code">Código SMS</label>
+                        <input type="text" formControlName="code" id="code" (keyup)="keyUp('code')"
+                            class="form-control mb-2" autocomplete="off" [class.is-invalid]="!code.valid && codeEditado"
+                            [class.is-valid]="code.valid && codeEditado" placeholder="Escribe tu código aquí" required>
+                    </div>
+
+                </form>
 
             </ng-container>
 
@@ -179,6 +199,14 @@
                     </button>
                 </div>
 
+                <!-- Confirmar codigo -->
+                <div class="col" *ngIf="step == 3">
+                    <button class="btn btn-success btn-block" type="submit" id="submit-button" form="codeForm"
+                        [disabled]="!signUpFormDisabled">
+                        Enviar
+                    </button>
+                </div>
+
             </div>
 
             <!-- {{ signUpForm.value | json }} -->
@@ -198,5 +226,17 @@
         </small>
 
     </form>
+
+    <div class="row">
+        <div *ngIf="user">
+
+            You have succesfuly logged in with your phone Number
+
+            <br>
+
+            UserId: {{ user?.uid }}
+
+        </div>
+    </div>
 
 </div>
