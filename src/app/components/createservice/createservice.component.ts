@@ -60,6 +60,7 @@ export class CreateserviceComponent implements OnInit {
                 Validators.minLength(20),
                 Validators.maxLength(255)
             ]),
+            tags: new FormControl([], Validators.required),
             horario: new FormControl([...horario], Validators.required)
         });
 
@@ -81,6 +82,7 @@ export class CreateserviceComponent implements OnInit {
     get nombre() { return this.serviceForm.get('nombre'); }
     get descripcion() { return this.serviceForm.get('descripcion'); }
     get days() { return this.serviceForm.get('horario'); }
+    get etiquetas() { return this.serviceForm.get('tags'); }
 
     // Función que se manda a llamar para ver si un campo fue editado
     keyUp(campo: string) {
@@ -96,17 +98,37 @@ export class CreateserviceComponent implements OnInit {
     // Get que nos permite desactivar los botones si los campos no son válidos
     get serviceFormDisabled() {
         switch (this.step) {
-            case 0: return this.nombre.valid && this.descripcion.valid;
+            case 0:
+                return this.nombre.valid && this.descripcion.valid && this.etiquetas.value.length > 0 && this.etiquetas.value.length < 4;
             case 1:
+                // Checa si existe algun error en los horarios
                 let result = true;
                 this.days.value.forEach((x: Horario) => {
-                    if (x.error && x.activado) { result = false; return; }
+                    if (x.error && x.activado) { result = false; return; } // Si el dia esta activado y tiene error
                 });
-                const index = this.days.value.findIndex((x: Horario) => x.activado);
+                const index = this.days.value.findIndex((x: Horario) => x.activado); // Al menos debe de tener un dia activado
                 if (index != -1) { return result; }
                 else { return false; }
             default: return false;
         }
+    }
+
+    // Ver si el tag esta seleccionado
+    checkSelectedTag(tag: string) { return this.etiquetas.value.includes(tag); }
+
+    // Ingresamos la etiqueta el arreglo de tags
+    selectTag(tag: string) {
+
+        // Si ya esta seleccionada, la quitamos del arreglo
+        if (this.checkSelectedTag(tag)) {
+            const index = this.etiquetas.value.indexOf(tag);
+            this.etiquetas.value.splice(index, 1);
+            return;
+        }
+
+        // El usuario solo puede elegir hasta 3 etiquetas y al menos 1
+        if (this.etiquetas.value.length < 3) { this.etiquetas.value.push(tag); }
+
     }
 
     // Para ponerlo en el horario

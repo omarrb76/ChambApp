@@ -98,9 +98,9 @@ input[type='radio']:checked:after {
     border: 2px solid white;
 }
 
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+/* .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: #8064A2 !important;
-}
+} */
 
 .tags {
     background-color: #5ca6fa;
@@ -108,4 +108,12 @@ input[type='radio']:checked:after {
 
 .tags:hover {
     background-color: #4880c0;
+}
+
+.tags-selected {
+    background-color: #8064A2;
+}
+
+.tags-selected:hover {
+    background-color: #524068;
 }
