@@ -53,18 +53,55 @@
             <!-- Paso 2: Horario -->
             <ng-container *ngSwitchCase="1">
 
+                <h4 class="text-muted mb-2">Especifíca tu horario de trabajo</h4>
+                <br>
+
                 <!-- Dias de la semana (cuando se le da click, aparece mas informacion) -->
                 <div class="form-row align-items-center">
                     <div class="col mb-2" *ngFor="let dia of dias">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="dia" (click)="agregarRemoverDia(dia)"
-                                checked>
+                            <input type="checkbox" class="custom-control-input" [id]="dia"
+                                (click)="agregarRemoverDia(dia)" [checked]=encontrarDia(dia).activado>
                             <label class="custom-control-label" [for]="dia">
                                 <h5>{{ primerLetra(dia) }}</h5>
                             </label>
                         </div>
                     </div>
                 </div>
+
+                <ng-container [ngSwitch]="diaSelected">
+
+                    <ng-container *ngFor="let dia of dias">
+
+                        <ng-container *ngSwitchCase="dia">
+
+                            <h5 class="text-muted mt-2">Horario para el día {{dia}}</h5>
+
+                            <!-- Hora de inicio -->
+                            <div class="form-group">
+                                <label for="hora_inicio">Hora de apertura</label>
+                                <input type="time" class="form-control mb-2" [value]="encontrarDia(dia).hora_inicio"
+                                    [class.is-invalid]="encontrarDia(dia).error"
+                                    [class.is-valid]="!encontrarDia(dia).error" (change)="cambioHora(tiempo1, tiempo2)"
+                                    #tiempo1>
+                            </div>
+
+                            <!-- Hora de término -->
+                            <div class="form-group">
+                                <label for="hora_fin">Hora de clausura</label>
+                                <input type="time" class="form-control mb-2" [value]="encontrarDia(dia).hora_termino"
+                                    [class.is-invalid]="encontrarDia(dia).error"
+                                    [class.is-valid]="!encontrarDia(dia).error" (change)="cambioHora(tiempo1, tiempo2)"
+                                    #tiempo2>
+                            </div>
+
+                        </ng-container>
+
+                    </ng-container>
+
+                </ng-container>
+
+                <span class="text-danger">{{mostrarErrores()}}</span>
 
             </ng-container>
 
@@ -76,7 +113,7 @@
             </ng-container>
 
             <!-- Botones de siguiente y anterior -->
-            <div class="row">
+            <div class="row mt-2">
 
                 <!-- Anterior -->
                 <div class="col" *ngIf="step > 0" (click)="cambiarPaso(false)">
@@ -88,7 +125,7 @@
                 <!-- Siguiente -->
                 <div class="col" *ngIf="step < 2">
                     <button type="button" class="btn btn-success btn-block" (click)="cambiarPaso(true)"
-                        [disabled]="!signUpFormDisabled">
+                        [disabled]="!serviceFormDisabled">
                         Siguiente
                     </button>
                 </div>
