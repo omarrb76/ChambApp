@@ -101,3 +101,11 @@ input[type='radio']:checked:after {
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: #8064A2 !important;
 }
+
+.tags {
+    background-color: #5ca6fa;
+}
+
+.tags:hover {
+    background-color: #4880c0;
+}

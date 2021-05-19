@@ -6,6 +6,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Horario } from 'src/app/models/Horario';
 
+const tags = [
+    "Aseo", "Fontanero", "Herrero", "Niñero", "Medicina",
+    "Carpintero", "Albañil", "Trabajo pesado", "Abogado",
+    "Cuidado del hogar", "Agua", "Jardinero", "Vigilante"
+];
+const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
 @Component({
     selector: 'app-createservice',
     templateUrl: './createservice.component.html',
@@ -14,8 +21,9 @@ import { Horario } from 'src/app/models/Horario';
 export class CreateserviceComponent implements OnInit {
 
     serviceForm: any = null!;           // Formulario de crear cuenta
-    step: number = 1;                   // El paso en el que vamos [0 => Nombre del servicio, descripción del servicio, tags | 1 => horario | 2 => fotos ]
-    dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; // Para elegir el horario (ngFor)
+    step: number = 0;                   // El paso en el que vamos [0 => Nombre del servicio, descripción del servicio, tags | 1 => horario | 2 => fotos ]
+    tags = tags;                        // Elegir los tags
+    dias = dias;                        // Para elegir el horario (ngFor)
     diaSelected: string = "Domingo";    // Para mostrar el horario de cada dia
 
     // Variables para poner errores en el formulario
@@ -186,7 +194,7 @@ export class CreateserviceComponent implements OnInit {
                 } else {
                     respuesta += ", " + x.dia;
                 }
-                
+
             }
         });
         if (!primeraVez) { respuesta += " es erróneo" }

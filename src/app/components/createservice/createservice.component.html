@@ -48,6 +48,19 @@
                     </textarea>
                 </div>
 
+                <!-- TAGS -->
+                <div class="form-group">
+                    <label>Elije las 3 características que más se adaptan a tu servicio</label>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-4 col-sm-3 border rounded m-2 py-2 tags d-flex align-items-center pointer"
+                            *ngFor="let tag of tags">
+                            <div class="mx-auto text-center">
+                                <strong class="text-white">{{tag}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </ng-container>
 
             <!-- Paso 2: Horario -->
