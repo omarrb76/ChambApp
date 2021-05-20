@@ -1,4 +1,4 @@
-<div class="container mt-5 pt-3 pt-lg-4">
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
 
     <!-- Titulo (header) -->
     <div class="row">
@@ -215,11 +215,13 @@
 
         </ng-container>
 
+        <!-- Explicación de diferencia entre cliente y trabajador -->
         <small class="form-text text-muted mt-2" *ngIf="step==1">
-            Cliente: este tipo de usuario es para aquellos usuarios que solo quieran contratar servicios
+            <strong>Cliente:</strong> este tipo de usuario es para aquellos usuarios que solo quieran contratar
+            servicios
             usando la aplicación ChambApp.
             <br><br>
-            Trabajador: este tipo de usuario es para aquellos usuarios que quieran usar la aplicación
+            <strong>Trabajador:</strong> este tipo de usuario es para aquellos usuarios que quieran usar la aplicación
             ChambApp para publicar su servicio; información adicional será requerida para ingresar los datos
             de su servicio.
             <br><br>
@@ -230,3 +232,19 @@
     </form>
 
 </div>
+
+<!-- Spinner de cuando carga la pantalla -->
+<ng-template #cargando>
+    <div class="container mt-5 pt-3 pt-lg-4">
+        <div class="row d-flex justify-content-center">
+            <div class="spinner-grow text-info my-3" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col text-center mt-3">
+                <h3>Guardando información</h3>
+            </div>
+        </div>
+    </div>
+</ng-template>

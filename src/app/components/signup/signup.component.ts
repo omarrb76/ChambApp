@@ -4,6 +4,8 @@ import { FirestoreService } from './../../services/firebase/firestore.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { User } from 'src/app/models/User';
+import { tap, first } from 'rxjs/operators';
 
 const estados = [
     'Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 'Chihuahua',
@@ -26,6 +28,7 @@ export class SignupComponent implements OnInit {
     estados = estados;          // Los estados de México
     step: number = 0;           // El paso en el que vamos [0 => nombre, apellido, estado | 1 => fecha de nacimiento, genero, nombre de usuario, tipo de usuario | 2 => telefono | 3 => confirmar telefono ]
     error: string = "";         // Mostramos un mensaje de error si se equivoco en el código de SMS
+    loading: boolean = false;   // Para mostrar un spinner cuando este cargando la pagina
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
@@ -70,7 +73,7 @@ export class SignupComponent implements OnInit {
 
     // Si hay un usuario activo, no deberia de estar en esta página
     ngOnInit(): void {
-        this.authService.getUsuarioConectado().subscribe((user: any) => {
+        this.authService.getUsuarioConectado().pipe(tap(), first()).toPromise().then((user: any) => {
             if (user) { this.authService.navigate('home'); }
         });
     }
@@ -101,20 +104,37 @@ export class SignupComponent implements OnInit {
     }
 
     // Es llamado para enviar el código de SMS
-    submitCodeForm() {
+    async submitCodeForm() {
 
         if (this.codeForm.valid) {
-            this.windowRef.confirmationResult
-                .confirm(this.code.value)
-                .then((result: any) => {
-                    console.log('Inicio sesion correctamente');
 
-                    if (this.tipo.value == 's') {
-                        this.navigate('create-service');
-                    } else {
-                        this.navigate('home');
+            this.loading = true;
+
+            await this.windowRef.confirmationResult
+                .confirm(this.code.value)
+                .then(async (result: any) => {
+
+                    const nuevoUsuario: User = {
+                        nombre: this.nombre.value,
+                        apellido: this.apellido.value,
+                        estado: this.estado.value,
+                        fecha: this.fecha.value,
+                        genero: this.genero.value,
+                        username: this.username.value,
+                        tipo: this.tipo.value,
+                        telefono: "+52" + this.telefono.value
                     }
-                    
+
+                    await this.firestoreService.putUser(nuevoUsuario)
+                        .then((result: any) => {
+                            if (this.tipo.value == 's') {
+                                this.navigate('create-service');
+                            } else {
+                                this.navigate('home');
+                            }
+                        })
+                        .catch((error: any) => console.log('Hubo un error al subir la información a firebase'))
+
                 })
                 .catch((error: any) => {
                     if (error.code == 'auth/invalid-verification-code') {

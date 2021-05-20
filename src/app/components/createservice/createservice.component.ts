@@ -79,6 +79,7 @@ export class CreateserviceComponent implements OnInit {
 
         this.storageService.getLoading$().subscribe((loading: boolean) => this.loading = loading);
 
+        // Este si tiene que ser suscripcion, ya que un campo que se llena requiere especificamente del usuario logeado
         this.authService.getUsuarioConectado().subscribe((user: any) => {
             if (!user) { this.authService.navigate('home'); }
             this.user = user;
@@ -334,7 +335,10 @@ export class CreateserviceComponent implements OnInit {
 
                 // Lo ponemos en loading otra vez (solo se ve en conexiones super lentas)
                 this.storageService.setLoading$(true);
-                this.firestoreService.putServicio(servicio, this.user.phoneNumber).then(() => this.storageService.setLoading$(false));
+                this.firestoreService.putServicio(servicio, this.user.phoneNumber).then(() => {
+                    this.storageService.setLoading$(false);
+                    this.navigate('home');
+                });
             });
 
     }

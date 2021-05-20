@@ -18,6 +18,7 @@ export class LoadingFilesComponent implements OnInit {
 
     // Los archivos nos los van a mandar desde un componente padre
     @Input() files: Archivo[] = [];
+    @Input() username: string = "";
 
     log: string = "";
 
@@ -47,7 +48,7 @@ export class LoadingFilesComponent implements OnInit {
 
             // Empezamos los trabajos de obtener referencia (link al archivo) y de subir el archivo
             let referencia = this.storageService.URLCloudStorage(file.archivo.name);
-            let tarea = this.storageService.uploadCloudStorage(file.archivo.name, resized);
+            let tarea = this.storageService.uploadCloudStorage(this.username + "/images/" + file.archivo.name, resized);
 
             // Nos suscribimos a cambios en el porcentaje
             tarea.percentageChanges().subscribe((porcentaje) => file.porcentaje = porcentaje!);
@@ -55,8 +56,8 @@ export class LoadingFilesComponent implements OnInit {
             // Cuando se acabe la tarea, vamos a obtener la URL
             await tarea.then(async () => {
                 this.storageService.setLog$('Obteniendo URL de ' + file.archivo.name);
-                await referencia.getDownloadURL().pipe(tap(),first())
-                .toPromise().then((URL) => file.url = URL);
+                await referencia.getDownloadURL().pipe(tap(), first())
+                    .toPromise().then((URL) => file.url = URL);
             });
 
         }));

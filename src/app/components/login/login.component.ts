@@ -4,6 +4,7 @@ import { WindowService } from './../../services/window.service';
 import { FirestoreService } from './../../services/firebase/firestore.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { tap, first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit {
     // Si hay un usuario activo, no deberia de estar en esta página
     ngOnInit() {
 
-        this.authService.getUsuarioConectado().subscribe((user: any) => {
+        this.authService.getUsuarioConectado().pipe(tap(), first()).toPromise().then((user: any) => {
             if (user) { this.authService.navigate('home'); }
         });
 
