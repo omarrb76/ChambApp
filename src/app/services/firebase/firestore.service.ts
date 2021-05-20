@@ -2,6 +2,7 @@
 
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
+import { Servicio } from 'src/app/models/Servicio';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +10,10 @@ import { Injectable } from '@angular/core';
 export class FirestoreService {
 
     constructor(private db: AngularFirestore) { }
+
+    putServicio(servicio: Servicio, id: string) {
+        return this.db.collection('servicios').doc(id).set(servicio);
+    }
 
     /********************* METODOS DE EJEMPLO (YA LOS BORRAREMOS) ************************/
 

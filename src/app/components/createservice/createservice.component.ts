@@ -7,6 +7,8 @@ import { FirestoreService } from './../../services/firebase/firestore.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Horario } from 'src/app/models/Horario';
+import { Servicio } from 'src/app/models/Servicio';
+import { tap, first } from 'rxjs/operators';
 
 const tags = [
     "Aseo", "Fontanero", "Herrero", "Niñero", "Medicina",
@@ -29,6 +31,7 @@ export class CreateserviceComponent implements OnInit {
     diaSelected: string = "Domingo";    // Para mostrar el horario de cada dia
     archivos: Archivo[] = [];           // Las fotos que subira el usuario, al menos 1 máximo 5
     loading: boolean = false;           // Mostrar la barra de cargando información a firebase
+    user: any;                          // Para obtener el número de teléfono del usuario logeado
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
@@ -78,6 +81,7 @@ export class CreateserviceComponent implements OnInit {
 
         this.authService.getUsuarioConectado().subscribe((user: any) => {
             if (!user) { this.authService.navigate('home'); }
+            this.user = user;
         });
 
     }
@@ -302,13 +306,36 @@ export class CreateserviceComponent implements OnInit {
     }
 
     // Procesamos el formulario de servicio
-    submitServiceForm() {
+    async submitServiceForm() {
 
         // En este punto ya tenemos todos los campos validados, mandemoslos a firebase
 
-
         // Le decimos al subject que esta cargando la página
         this.storageService.setLoading$(true);
+
+        // Cuando termine de cargar los archivos ejecutamos lo que hay en el then (subimos la informacion a firebase)
+        await this.storageService.getLoading$().pipe(tap(), first())
+            .toPromise().then((res: boolean) => {
+
+                // Links de las fotos que estaran en firebase
+                let archivosLinks: any[] = [];
+                this.archivos.forEach((x: Archivo) => {
+                    archivosLinks.push(x.url);
+                });
+
+                // Objeto servicio que agregaremos a firebase
+                const servicio: Servicio = {
+                    nombre: this.nombre.value,
+                    descripcion: this.descripcion.value,
+                    tags: this.etiquetas.value,
+                    horario: this.days.value,
+                    fotos: archivosLinks
+                }
+
+                // Lo ponemos en loading otra vez (solo se ve en conexiones super lentas)
+                this.storageService.setLoading$(true);
+                this.firestoreService.putServicio(servicio, this.user.phoneNumber).then(() => this.storageService.setLoading$(false));
+            });
 
     }
 

@@ -7,6 +7,7 @@ import { StorageService } from './../../services/firebase/storage.service';
 import { Archivo } from './../../models/Archivo';
 import { Component, Input, OnInit } from '@angular/core';
 import { NgxImageCompressService } from 'ngx-image-compress';
+import { tap, first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-loading-files',
@@ -52,9 +53,10 @@ export class LoadingFilesComponent implements OnInit {
             tarea.percentageChanges().subscribe((porcentaje) => file.porcentaje = porcentaje!);
 
             // Cuando se acabe la tarea, vamos a obtener la URL
-            await tarea.then(() => {
+            await tarea.then(async () => {
                 this.storageService.setLog$('Obteniendo URL de ' + file.archivo.name);
-                referencia.getDownloadURL().subscribe((URL) => file.url = URL);
+                await referencia.getDownloadURL().pipe(tap(),first())
+                .toPromise().then((URL) => file.url = URL);
             });
 
         }));
