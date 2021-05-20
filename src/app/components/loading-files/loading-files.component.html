@@ -9,10 +9,10 @@
     </div>
     <div class="progress my-3" *ngFor="let file of files">
         <div class="progress-bar" role="progressbar" [style]="getPorcentaje(file)">
-            {{ file.archivo.name }}
+            <span style="word-break: break-all;">{{ file.archivo.name }}</span>
         </div>
     </div>
     <div class="text-center mb-3">
-        {{ log }}
+        <span style="word-break: break-all;">{{ log }}</span>
     </div>
 </div>

@@ -46,9 +46,11 @@ export class LoadingFilesComponent implements OnInit {
             // El archivo con el nuevo tamaño (de ser necesario)
             const resized = await this.compressFile(file.archivo).then();
 
+            const filename = this.username + "/images/" + file.archivo.name;
+
             // Empezamos los trabajos de obtener referencia (link al archivo) y de subir el archivo
-            let referencia = this.storageService.URLCloudStorage(file.archivo.name);
-            let tarea = this.storageService.uploadCloudStorage(this.username + "/images/" + file.archivo.name, resized);
+            let referencia = this.storageService.URLCloudStorage(filename);
+            let tarea = this.storageService.uploadCloudStorage(filename, resized);
 
             // Nos suscribimos a cambios en el porcentaje
             tarea.percentageChanges().subscribe((porcentaje) => file.porcentaje = porcentaje!);
