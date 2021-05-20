@@ -41,12 +41,12 @@ app-footer {
 .hamburguesa {
     max-width: 30px;
     max-height: 30px;
-    background-color: Transparent;
-    background-repeat:no-repeat;
+    background-color: transparent;
+    background-repeat: no-repeat;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
     overflow: hidden;
-    outline:none;
+    outline: none;
 }
 
 .text-verde {
@@ -116,4 +116,28 @@ input[type='radio']:checked:after {
 
 .tags-selected:hover {
     background-color: #524068;
+}
+
+.button-none {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+.borrar-imagen {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    background-size: 100% 100%;
+    background-image: url("https://img.freepik.com/iconos-gratis/x-circulo_318-2105.jpg?size=338&ext=jpg");
+    top: -10px;
+    right: 5px;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
 }

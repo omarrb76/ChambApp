@@ -1,3 +1,5 @@
+import { StorageService } from './../../services/firebase/storage.service';
+import { Archivo } from './../../models/Archivo';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from './../../services/firebase/auth.service';
 import { WindowService } from './../../services/window.service';
@@ -22,9 +24,11 @@ export class CreateserviceComponent implements OnInit {
 
     serviceForm: any = null!;           // Formulario de crear cuenta
     step: number = 0;                   // El paso en el que vamos [0 => Nombre del servicio, descripción del servicio, tags | 1 => horario | 2 => fotos ]
-    tags = tags;                        // Elegir los tags
+    tags = tags;                        // Elegir los tags, al menos 1 máximo 3
     dias = dias;                        // Para elegir el horario (ngFor)
     diaSelected: string = "Domingo";    // Para mostrar el horario de cada dia
+    archivos: Archivo[] = [];           // Las fotos que subira el usuario, al menos 1 máximo 5
+    loading: boolean = false;           // Mostrar la barra de cargando información a firebase
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
@@ -34,7 +38,8 @@ export class CreateserviceComponent implements OnInit {
         private router: Router,
         private firestoreService: FirestoreService,	// No se porque, pero no funciona si le quitan este servicio
         private windowService: WindowService,
-        private authService: AuthService
+        private authService: AuthService,
+        private storageService: StorageService
     ) {
 
         let horario: Horario[] = [];
@@ -69,8 +74,10 @@ export class CreateserviceComponent implements OnInit {
     // Si hay un usuario activo, no deberia de estar en esta página
     ngOnInit(): void {
 
+        this.storageService.getLoading$().subscribe((loading: boolean) => this.loading = loading);
+
         this.authService.getUsuarioConectado().subscribe((user: any) => {
-            //if (!user) { this.authService.navigate('home'); }
+            if (!user) { this.authService.navigate('home'); }
         });
 
     }
@@ -78,40 +85,9 @@ export class CreateserviceComponent implements OnInit {
     // Navegamos al link indicado
     navigate(link: string) { this.router.navigate([link]); }
 
-    // GETS
-    get nombre() { return this.serviceForm.get('nombre'); }
-    get descripcion() { return this.serviceForm.get('descripcion'); }
-    get days() { return this.serviceForm.get('horario'); }
-    get etiquetas() { return this.serviceForm.get('tags'); }
-
-    // Función que se manda a llamar para ver si un campo fue editado
-    keyUp(campo: string) {
-        switch (campo) {
-            case 'nombre': this.nombreEditado = true; break;
-            case 'descripcion': this.descripcionEditado = true; break;
-        }
-    }
-
-    // Mostramos diferentes campos del formulario con cada paso
-    cambiarPaso(adelante: boolean) { adelante ? this.step++ : this.step--; }
-
-    // Get que nos permite desactivar los botones si los campos no son válidos
-    get serviceFormDisabled() {
-        switch (this.step) {
-            case 0:
-                return this.nombre.valid && this.descripcion.valid && this.etiquetas.value.length > 0 && this.etiquetas.value.length < 4;
-            case 1:
-                // Checa si existe algun error en los horarios
-                let result = true;
-                this.days.value.forEach((x: Horario) => {
-                    if (x.error && x.activado) { result = false; return; } // Si el dia esta activado y tiene error
-                });
-                const index = this.days.value.findIndex((x: Horario) => x.activado); // Al menos debe de tener un dia activado
-                if (index != -1) { return result; }
-                else { return false; }
-            default: return false;
-        }
-    }
+    /************************************************************************************************/
+    /******************************* MÉTODOS PARA EL PASO DE TAGS ***********************************/
+    /************************************************************************************************/
 
     // Ver si el tag esta seleccionado
     checkSelectedTag(tag: string) { return this.etiquetas.value.includes(tag); }
@@ -130,6 +106,10 @@ export class CreateserviceComponent implements OnInit {
         if (this.etiquetas.value.length < 3) { this.etiquetas.value.push(tag); }
 
     }
+
+    /************************************************************************************************/
+    /******************************* MÉTODOS PARA EL PASO DEL HORARIO *******************************/
+    /************************************************************************************************/
 
     // Para ponerlo en el horario
     primerLetra(palabra: string) { return palabra.charAt(0); }
@@ -159,11 +139,7 @@ export class CreateserviceComponent implements OnInit {
 
     }
 
-    // Procesamos el formulario de servicio
-    submitServiceForm() {
-
-    }
-
+    // Checa si la hora es correcta
     checarHora(tiempo1: any, tiempo2: any) {
 
         const hora_inicio = tiempo1.value.split(":");
@@ -205,6 +181,7 @@ export class CreateserviceComponent implements OnInit {
         return this.days.value[index];
     }
 
+    // Mostrar errores en la pantalla de horario
     mostrarErrores() {
         let respuesta = "";
         let primeraVez = true;
@@ -221,6 +198,118 @@ export class CreateserviceComponent implements OnInit {
         });
         if (!primeraVez) { respuesta += " es erróneo" }
         return respuesta;
+    }
+
+    /************************************************************************************************/
+    /******************************* MÉTODOS PARA EL PASO DE LAS FOTOS ******************************/
+    /************************************************************************************************/
+
+    //Evento que se gatilla cuando el input de tipo archivo cambia
+    cambioArchivo(event: any) {
+
+        // Si el usuario eligió archivos
+        if (event.target.files.length > 0) {
+
+            const archivo = event.target.files[0];
+
+            if (this.archivos.length < 5) {
+                this.archivos.push({                    // Metemos el nuevo archivo en el arreglo
+                    archivo: archivo,
+                    url: "",
+                    porcentaje: 0
+                });
+
+                this.mostrarImagen(archivo);
+                event.target.value = "";                // Por si el usuario borra la foto y vuelve a elegir la misma
+
+            }
+
+        }
+
+    }
+
+    // Obtiene el id de la imagen y cambia el src
+    mostrarImagen(archivo: File) {
+
+        setTimeout(() => {
+
+            const imagenHTML = document.getElementById(archivo.name) as any;
+            const reader = new FileReader();
+
+            reader.readAsDataURL(archivo); // read file as data url
+
+            reader.onload = (event) => { // called once readAsDataURL is completed
+                imagenHTML.src = event.target?.result;
+            };
+
+        }, 0);
+
+    }
+
+    // Quita la imagen del arreglo de archivos
+    borrarImagen(archivo: Archivo) {
+        const index = this.archivos.indexOf(archivo);
+        this.archivos.splice(index, 1);
+    }
+
+    /************************************************************************************************/
+    /******************************* MÉTODOS DEL FORMULARIO *****************************************/
+    /************************************************************************************************/
+
+    // GETS
+    get nombre() { return this.serviceForm.get('nombre'); }
+    get descripcion() { return this.serviceForm.get('descripcion'); }
+    get days() { return this.serviceForm.get('horario'); }
+    get etiquetas() { return this.serviceForm.get('tags'); }
+
+    // Función que se manda a llamar para ver si un campo fue editado
+    keyUp(campo: string) {
+        switch (campo) {
+            case 'nombre': this.nombreEditado = true; break;
+            case 'descripcion': this.descripcionEditado = true; break;
+        }
+    }
+
+    // Mostramos diferentes campos del formulario con cada paso
+    cambiarPaso(adelante: boolean) {
+
+        adelante ? this.step++ : this.step--;
+
+        // Si estamos en las fotos y el usuario ya habia elegido unas, las pintamos
+        if (this.step == 2) {
+            this.archivos.forEach((x: Archivo) => { this.mostrarImagen(x.archivo); })
+        } else if (this.step == 3) { this.submitServiceForm() }
+
+    }
+
+    // Get que nos permite desactivar los botones si los campos no son válidos
+    get serviceFormDisabled() {
+        switch (this.step) {
+            case 0:
+                return this.nombre.valid && this.descripcion.valid && this.etiquetas.value.length > 0 && this.etiquetas.value.length < 4;
+            case 1:
+                // Checa si existe algun error en los horarios
+                let result = true;
+                this.days.value.forEach((x: Horario) => {
+                    if (x.error && x.activado) { result = false; return; } // Si el dia esta activado y tiene error
+                });
+                const index = this.days.value.findIndex((x: Horario) => x.activado); // Al menos debe de tener un dia activado
+                if (index != -1) { return result; }
+                return false;
+            case 2: return this.archivos.length > 0 ? true : false;
+            default: return false;
+        }
+    }
+
+    // Procesamos el formulario de servicio
+    submitServiceForm() {
+
+        // En este punto ya tenemos todos los campos validados, mandemoslos a firebase
+
+
+        // Le decimos al subject que esta cargando la página
+        this.storageService.setLoading$(true);
+
     }
 
 }

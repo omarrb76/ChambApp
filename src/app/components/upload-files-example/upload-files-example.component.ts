@@ -66,7 +66,7 @@ export class UploadFilesExampleComponent implements OnInit {
     }
 
     //Sube el archivo a Cloud Storage, tiene async a lo wey. Pero funciona
-    async subirArchivo() {
+    subirArchivo() {
 
         // Le decimos al subject que esta cargando la página
         this.storageService.setLoading$(true);

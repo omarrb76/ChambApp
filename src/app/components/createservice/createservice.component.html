@@ -1,4 +1,4 @@
-<div class="container mt-5 pt-3 pt-lg-4">
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
 
     <!-- Titulo (header) -->
     <div class="row">
@@ -52,8 +52,7 @@
                 <div class="form-group">
                     <label>Elije las 3 características que más se adaptan a tu servicio</label>
                     <div class="row d-flex justify-content-center">
-                        <div *ngFor="let tag of tags" 
-                            [class.tags]="checkSelectedTag(tag)"
+                        <div *ngFor="let tag of tags" [class.tags]="checkSelectedTag(tag)"
                             [class.tags-selected]="!checkSelectedTag(tag)"
                             class="col-4 col-sm-3 rounded m-2 py-2 d-flex align-items-center pointer"
                             (click)="selectTag(tag)">
@@ -129,6 +128,34 @@
 
                 <p>Por último, incluye fotos de tu servicio para que la gente conozca tus resultados.</p>
 
+                <div class="row d-flex justify-content-around">
+
+                    <!-- Imagenes (una vez que el usuario haya subido algo) -->
+                    <div class="col-6 my-3" *ngFor="let archivo of archivos">
+                        <!-- Imagen -->
+                        <img [id]="archivo.archivo.name" class="img-fluid rounded">
+                        <!-- Boton de borrar -->
+                        <button class="rounded-circle borrar-imagen" (click)="borrarImagen(archivo)"></button>
+                    </div>
+
+                    <!-- Div col del boton -->
+                    <div class="col align-items-center my-3" [class.d-flex]="archivos.length < 5"
+                        [hidden]="archivos.length > 4">
+
+                        <!-- Botón que activa el input -->
+                        <div class="mx-auto">
+                            <button type="button" class="h1 button-none text-verde" (click)="input.click()">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Input escondido, sera activado por el boton -->
+                <input type="file" accept="image/*" (change)="cambioArchivo($event)" hidden #input>
+
             </ng-container>
 
             <!-- Botones de siguiente y anterior -->
@@ -142,26 +169,27 @@
                 </div>
 
                 <!-- Siguiente -->
-                <div class="col" *ngIf="step < 2">
+                <div class="col">
                     <button type="button" class="btn btn-success btn-block" (click)="cambiarPaso(true)"
                         [disabled]="!serviceFormDisabled">
-                        Siguiente
-                    </button>
-                </div>
-
-                <!-- Confirmar datos -->
-                <div class="col" *ngIf="step == 2">
-                    <button class="btn btn-success btn-block" type="submit" id="submit-button" disabled>
-                        Aceptar
+                        {{ step == 2 ? 'Aceptar' : 'Siguiente' }}
                     </button>
                 </div>
 
             </div>
-
-            {{ serviceForm.value | json }}
 
         </ng-container>
 
     </form>
 
 </div>
+
+<!-- Spinner de cuando carga la pantalla, junto con barras de progreso para la subida de archivos
+    (FEEDBACK) para que el usuario sepa que esta pasando -->
+<ng-template #cargando>
+    <div class="container mt-5 pt-3 pt-lg-4">
+        <div class="row d-flex justify-content-center">
+            <app-loading-files [files]="archivos"></app-loading-files>
+        </div>
+    </div>
+</ng-template>
