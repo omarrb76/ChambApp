@@ -8,6 +8,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FirestoreExampleComponent } from './components/firestore-example/firestore-example.component';
 import { AuthExampleComponent } from './components/auth-example/auth-example.component';
+import { LoggedinComponent } from "./components/loggedin/loggedin.component";
+import { SearchComponent } from "./components/search/search.component";
+import { UserProfileComponent } from "./components/user-profile/user-profile.component";
+import { ServicioComponent } from "./components/servicio/servicio.component";
+import { EditClientComponent } from "./components/edit-client/edit-client.component";
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -18,6 +23,11 @@ const routes: Routes = [
   { path: 'upload-files', component: UploadFilesExampleComponent },
   { path: 'firestore', component: FirestoreExampleComponent },
   { path: 'auth', component: AuthExampleComponent },
+  { path: 'loggedin', component: LoggedinComponent },
+  { path: 'search', component: SearchComponent },
+  { path: 'user-profile', component: UserProfileComponent },
+  { path: 'servicio', component: ServicioComponent },
+  { path: 'edit-client', component: EditClientComponent },  
   { path: '**', pathMatch: 'full', redirectTo: 'home' }
 ];
 
