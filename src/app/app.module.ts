@@ -29,6 +29,11 @@ import { FaqComponent } from './components/faq/faq.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { LoginComponent } from './components/login/login.component';
 import { CreateserviceComponent } from './components/createservice/createservice.component';
+import { LoggedinComponent } from './components/loggedin/loggedin.component';
+import { SearchComponent } from './components/search/search.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ServicioComponent } from './components/servicio/servicio.component';
+import { EditClientComponent } from './components/edit-client/edit-client.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +49,12 @@ import { CreateserviceComponent } from './components/createservice/createservice
     FaqComponent,
     SignupComponent,
     LoginComponent,
-    CreateserviceComponent
+    CreateserviceComponent,
+    LoggedinComponent,
+    SearchComponent,
+    UserProfileComponent,
+    ServicioComponent,
+    EditClientComponent
   ],
   imports: [
     BrowserModule,

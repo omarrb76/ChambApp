@@ -1,0 +1,10 @@
+a.active{
+    background-color: #51be95;
+    border: #51be95;
+}
+
+img{
+    width: 50%;
+    height: 25%;
+    border-radius: 5%;
+}
