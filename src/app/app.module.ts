@@ -18,10 +18,6 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 // Componentes
 import { AppComponent } from './app.component';
 import { LoadingFilesComponent } from './components/loading-files/loading-files.component';
-import { FirestoreExampleComponent } from './components/firestore-example/firestore-example.component';
-import { AuthExampleComponent } from './components/auth-example/auth-example.component';
-import { UploadFilesExampleComponent } from './components/upload-files-example/upload-files-example.component';
-import { MenuExampleComponent } from './components/menu-example/menu-example.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -34,40 +30,38 @@ import { SearchComponent } from './components/search/search.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ServicioComponent } from './components/servicio/servicio.component';
 import { EditClientComponent } from './components/edit-client/edit-client.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoadingFilesComponent,
-    FirestoreExampleComponent,
-    AuthExampleComponent,
-    UploadFilesExampleComponent,
-    MenuExampleComponent,
-    HomeComponent,
-    NavbarComponent,
-    FooterComponent,
-    FaqComponent,
-    SignupComponent,
-    LoginComponent,
-    CreateserviceComponent,
-    LoggedinComponent,
-    SearchComponent,
-    UserProfileComponent,
-    ServicioComponent,
-    EditClientComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule
-  ],
-  providers: [NgxImageCompressService],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        LoadingFilesComponent,
+        HomeComponent,
+        NavbarComponent,
+        FooterComponent,
+        FaqComponent,
+        SignupComponent,
+        LoginComponent,
+        CreateserviceComponent,
+        LoggedinComponent,
+        SearchComponent,
+        UserProfileComponent,
+        ServicioComponent,
+        EditClientComponent,
+        LoadingComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFirestoreModule,
+        AngularFireAuthModule,
+        AngularFireStorageModule
+    ],
+    providers: [NgxImageCompressService],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

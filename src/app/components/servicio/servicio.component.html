@@ -1,34 +1,45 @@
-<div class="container  mt-5">
-    <div class="row align-items-center justify-content-end">
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
 
-
+    <!-- Titulo -->
+    <div class="row">
+        <div class="col">
+            <h3>Nombre del servicio</h3>
+        </div>
     </div>
 
-    <div class=" row  mb-3 text-center">
+    <!-- Foto de perfil -->
+    <div class="row mt-2">
+        <div class="col-6 mx-auto text-center">
+            <img class="img-fluid rounded" src="../../../assets/img/David.jpg" alt="profile_picture" />
+        </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="row mt-3 text-center">
         <div class="col">
-            <strong style="color: grey;" >Aguascalientes,Ags.</strong>
-            <img src="../../../assets/img/user.png" alt="">
-            <h3>Carlos García Gutiérrez</h3>
-            <h5>"Charly99"</h5>
-            <li class="  list-group-item list-group-item-action list-group-item-success">Calificacion: 
+            <h5>Nombre real del prestador</h5>
+            <h5>Nombre de usuario del prestador</h5>
+            <p class="text-muted">Ubicación del prestador</p>
+            <div class="list-group-item list-group-item-action list-group-item-success">
+                Calificacion:
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
-                <small style="margin-top: 0px;" > (27 evaluaciones)</small>
-            </li>
-            
+                <i class="fas fa-star"></i>
+                <small style="margin-top: 0px;"> (27 evaluaciones)</small>
+            </div>
 
         </div>
     </div>
+
     <hr>
 
+    <!-- Carrusel -->
+    <div class="row">
 
-
-
-    <div class="row" style="max-height: 20%;">
         <div class="col">
-            <!-- Carrusel -->
+
             <div id="carouselExampleIndicators" class="carousel slide mx-auto" data-ride="carousel">
 
                 <ol class="carousel-indicators">
@@ -41,7 +52,7 @@
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="../../../assets/img/imagen1.png" alt="First slide">
                         <blockquote class="blockquote d-inline">
-                            <p class="mb-0">Rapido, Eficaaz y Muy Profesional!</p>
+                            <p class="mb-0">Rapido, Eficaz y Muy Profesional!</p>
                             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source
                                     Title</cite></footer>
                         </blockquote>
@@ -50,7 +61,7 @@
                     <div class="carousel-item">
                         <img class="d-block w-100" src="../../../assets/img/imagen2.jpg" alt="Second slide">
                         <blockquote class="blockquote d-inline">
-                            <p class="mb-0">Rapido, Eficaaz y Muy Profesional!</p>
+                            <p class="mb-0">Rapido, Eficaz y Muy Profesional!</p>
                             <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source
                                     Title</cite></footer>
                         </blockquote>
@@ -69,27 +80,33 @@
                 </a>
 
             </div>
+
         </div>
 
     </div>
-    <br><br>
 
-    <div class="d-flex ">
-        <form action="">
-            <strong><label class="mr-2" for="">Selecciona una fecha </label></strong>
-            <input type="date">
-
-        </form>
+    <!-- Seleccionar fecha -->
+    <div class="row mt-3">
+        <div class="col">
+            <div class="form-group">
+                <strong><label for="fecha">Selecciona una fecha</label></strong>
+                <input type="date" class="form-control" placeholder="Fecha">
+            </div>
+        </div>
     </div>
 
-
-
-    <div class="row justify-content-center">
+    <!-- Boton agendar cita -->
+    <div class="row justify-content-center mt-2">
         <div class="col-8">
-            <button type="button" class="btn btn-outline-success btn-lg btn-block mt-3">Agendar Cita</button>
-
+            <button type="button" class="btn btn-outline-success btn-lg btn-block">
+                Agendar Cita
+            </button>
         </div>
     </div>
-
 
 </div>
+
+<!-- Spinner de cuando carga la pantalla -->
+<ng-template #cargando>
+    <app-loading></app-loading>
+</ng-template>

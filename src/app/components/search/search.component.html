@@ -1,90 +1,109 @@
-<h1 class="text-center mt-5">Busqueda</h1>
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control ml-3 mr-sm-2 w-75" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
-      </form>
+    <!-- Titulo -->
+    <div class="row">
+        <div class="col">
+            <h3>Búsqueda</h3>
+        </div>
     </div>
-    <div class="col-md-2"></div>
-  </div>
+
+    <!-- Busqueda -->
+    <form class="row d-flex justify-content-center my-4 px-0">
+        <div class="col-8 mr-0">
+            <input class="form-control" type="search" placeholder="Buscar">
+        </div>
+        <div class="col-3 col-md-2 ml-0">
+            <button class="btn btn-success btn-block" type="submit">
+                <a (click)="navigate('search')" style="text-decoration: none;" class="text-white">
+                    <i class="fas fa-search"></i>
+                </a>
+            </button>
+        </div>
+    </form>
+
+    <!-- Filtros de busqueda -->
+    <div class="row align-items-start mt-2">
+        <div class="col text-center">
+            <i class="fas fa-baby fa-3x"></i>
+        </div>
+        <div class="col text-center">
+            <i class="fas fa-key fa-3x text-verde"></i>
+        </div>
+        <div class="col text-center">
+            <i class="fas fa-wrench fa-3x"></i>
+        </div>
+        <div class="col text-center">
+            <i class="fas fa-hammer fa-3x text-verde"></i>
+        </div>
+    </div>
+    <hr>
+    <div class="row align-items-start">
+        <div class="col text-center">
+            <i class="fas fa-hard-hat fa-3x text-verde"></i>
+        </div>
+        <div class="col text-center">
+            <i class="fas fa-paint-roller fa-3x"></i>
+        </div>
+        <div class="col text-center">
+            <i class="fas fa-broom fa-3x text-verde"></i>
+        </div>
+        <div class="col text-center">
+            <i class="fas fa-bath fa-3x"></i>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Resultados de busqueda -->
+    <table class="table table-striped table-dark">
+
+        <!-- Foto de perfil -->
+        <tr>
+            <td>
+                <p style="text-align: center;">
+                    <img class="img-fluid center-block" src="../../../assets/img/David.jpg" />
+                </p>
+            </td>
+        </tr>
+
+        <!-- Nombre -->
+        <tr>
+            <td>Nombre: David Francisco Cortes Pérez</td>
+        </tr>
+        <!-- Habilidades -->
+        <tr>
+            <td>Habilidades</td>
+        </tr>
+        <!-- Puntuacion -->
+        <tr>
+            <td>Puntuacion:</td>
+        </tr>
+        <!-- Horario -->
+        <tr>
+            <td>Horario:</td>
+        </tr>
+        <!-- Link para perfil de servicio -->
+        <tr>
+            <td><button class="btn btn-block btn-success">Ir</button></td>
+        </tr>
+    </table>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
 </div>
-<br>
-<div class="container mt-4">
-  <div class="row align-items-start pt-3">
-    <div class="col text-center">
-      <i class="fas fa-baby fa-3x"></i>
-    </div>
-    <div class="col text-center">
-      <i class="fas fa-key fa-3x text-verde"></i>
-    </div>
-    <div class="col text-center">
-      <i class="fas fa-wrench fa-3x"></i>
-    </div>
-    <div class="col text-center">
-      <i class="fas fa-hammer fa-3x text-verde"></i>
-    </div>
-  </div>
-  <hr>
-  <div class="row align-items-start">
-    <div class="col text-center">
-      <i class="fas fa-hard-hat fa-3x text-verde"></i>
-    </div>
-    <div class="col text-center">
-      <i class="fas fa-paint-roller fa-3x"></i>
-    </div>
-    <div class="col text-center">
-      <i class="fas fa-broom fa-3x text-verde"></i>
-    </div>
-    <div class="col text-center">
-      <i class="fas fa-bath fa-3x"></i>
-    </div>
-  </div>
-</div>
-<hr>
 
-<br>
-<table class="table table-striped table-dark">
-  <tr>
-    <td>
-      <p style="text-align: center;" >
-        <img class="img-fluid center-block" src="../../../assets/img/David.jpg" />
-      </p>
-    </td>
-   
-
-  </tr>
-  <tr> <td>Nombre: David Francisco Cortes Pérez</td></tr>
-  <tr>
-    <td>Habilidades</td>
-  </tr>
-  <tr>
-    <td>Puntuacion:</td>
-  </tr>
-  <tr>
-    <td>Horario:</td>
-  </tr>
-  <tr>
-    <td><button class="btn btn-block btn-success">Ir</button>
-    </td>
-  </tr>
-</table>
-
-<div>
-    
-</div>
-
-<div class="d-flex justify-content-center">
-    <nav  aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-      </nav>
-</div>
+<!-- Spinner de cuando carga la pantalla -->
+<ng-template #cargando>
+    <app-loading></app-loading>
+</ng-template>

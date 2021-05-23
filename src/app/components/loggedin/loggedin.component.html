@@ -1,68 +1,61 @@
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
 
-<h1 class="text-center mt-5">Bienvenido "Usuario" a Chambapp</h1>
-
-<div class="container">
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control ml-3 mr-sm-2 w-75" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit"><a [routerLink]="['faq']"  style="text-decoration: none;" class="text-white"><i class="fas fa-search"></i></a></button>
-          </form>
-        </div> 
-        <div class="col-md-2"></div>
+        <div class="col">
+            <h3>Bienvenido {{user.phoneNumber}} a Chambapp</h3>
+        </div>
     </div>
+
+    <form class="row d-flex justify-content-center my-4 px-0">
+        <div class="col-8 mr-0">
+            <input class="form-control" type="search" placeholder="Buscar">
+        </div>
+        <div class="col-3 col-md-2 ml-0">
+            <button class="btn btn-success btn-block" type="submit">
+                <a (click)="navigate('search')" style="text-decoration: none;" class="text-white">
+                    <i class="fas fa-search"></i>
+                </a>
+            </button>
+        </div>
+
+    </form>
+
+    <div class="card-deck">
+
+        <!-- <div class="card" style="max-width: 300px;">
+            <div class="card-header">
+                <img class="card-img-top img-fluid" src="../../../assets/img/ico_rayo.png" alt="Card image cap">
+            </div>
+            
+            <div class="card-body">
+                <h3 class="card-title">Electricista</h3>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                    content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-block btn-success">Ir</button>
+            </div>
+        </div> -->
+
+        <div class="card" *ngFor="let card of cards">
+            <div [style]="card.color" class="text-white card-header text-left">
+                <img class="card-img-top img-fluid" [src]="card.src" alt="Card image cap">
+                <h3 class=" ml-2 d-inline-flex card-title">{{card.titulo}}</h3>
+            </div>
+            <div class="card-body">
+
+                <p class="card-text">{{card.contenido}}</p>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-block btn-success" (click)="navigate('servicio')">Ir</button>
+            </div>
+        </div>
+
+    </div>
+
 </div>
 
-<div class="card-deck mt-5">
-    <div class="card">
-        <div style="background-color: 
-        #918513;" class="text-white card-header text-left">
-            <img class="card-img-top img-fluid"  src="../../../assets/img/ico_rayo.png" alt="Card image cap">
-            <h3 class="ml-2  d-inline-flex card-title">Electricista</h3>
-        </div>
-      <div class="card-body">
-        
-        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      </div>
-      <div class="card-footer">
-        <button class="btn btn-block btn-success">Ir</button>
-      </div>
-    </div>
-
-    <div class="card-deck mt-5">
-        <div class="card">
-            <div style="background-color: #5F1134;" class="text-white card-header text-left">
-                <img class="card-img-top img-fluid"  src="../../../assets/img/ico_paint.png" alt="Card image cap">
-                <h3 class=" ml-2 d-inline-flex card-title">Pintor</h3>
-            </div>
-          <div class="card-body">
-            
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          </div>
-          <div class="card-footer">
-            <button class="btn btn-block btn-success">Ir</button>
-          </div>
-        </div>
-
-        <div class="card-deck mt-5">
-            <div class="card">
-                <div style="background-color: #283866;" class="text-white card-header text-left">
-                    <img class="card-img-top img-fluid"  src="../../../assets/img/ico_plumb.png" alt="Card image cap">
-                    <h3 class=" ml-2 d-inline-flex card-title">Plomero</h3>
-                </div>
-              <div class="card-body">
-                
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              </div>
-              <div class="card-footer">
-                <button class="btn btn-block btn-success">Ir</button>
-              </div>
-            </div>
-
-  
-
-
-
-  </div>
-        
+<!-- Spinner de cuando carga la pantalla -->
+<ng-template #cargando>
+    <app-loading></app-loading>
+</ng-template>
