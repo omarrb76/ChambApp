@@ -57,6 +57,14 @@ app-footer {
     color: #367e62;
 }
 
+.text-rojo {
+    color: #ff0000;
+}
+
+.text-rojo:hover {
+    color: #ff0000af;
+}
+
 /* Los iconos del footer se hacen mas grande en pantalla medium */
 .icono {
     font-size:1.3rem;
