@@ -45,6 +45,11 @@ export class AuthService {
         return this.auth.signInWithPhoneNumber(num, appVerifier);
     }
 
+    // Actualizar el perfil de usuario
+    updateProfile(profile: any) {
+        return firebase.auth().currentUser?.updateProfile(profile);
+    }
+
     // Cerramos sesion
     logout() {
         this.auth.signOut();

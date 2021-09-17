@@ -1,3 +1,4 @@
+import { FirestoreService } from './../../services/firebase/firestore.service';
 import { AuthService } from './../../services/firebase/auth.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -36,18 +37,29 @@ export class LoggedinComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private authService: AuthService
+        private authService: AuthService,
+        private firestoreService: FirestoreService
     ) { }
 
     // Si no hay un usuario activo, no deberia de estar en esta página
     ngOnInit(): void {
         this.authService.getUsuarioConectado().subscribe((user: any) => {
             if (!user) { this.authService.navigate('home'); }
-            this.user = user;
             this.loading = false;
         });
     }
 
     navigate(link: string) { this.router.navigate([link]); }
+
+    // Dependiendo de la hora nos devuelve un saludo diferente
+    getSaludoHora() {
+        let saludo: string = "";
+        const hora = new Date().getHours();
+        if (hora >= 0 && hora <12) saludo = 'Buenos días ';
+        else if (hora < 19) saludo = 'Buenas tardes ';
+        else saludo = 'Buenas noches '
+        saludo += this.user.displayName;
+        return saludo;
+    }
 
 }

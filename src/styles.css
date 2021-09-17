@@ -92,6 +92,11 @@ input[type='radio']:after {
     border: 2px solid white;
 }
 
+/* Para las calificaciones */
+.calif {
+    font-size: 1.6rem;
+}
+
 input[type='radio']:checked:after {
     width: 18px;
     height: 18px;
@@ -105,10 +110,6 @@ input[type='radio']:checked:after {
     visibility: visible;
     border: 2px solid white;
 }
-
-/* .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    background-color: #8064A2 !important;
-} */
 
 .tags {
     background-color: #5ca6fa;

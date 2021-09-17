@@ -15,7 +15,12 @@ export class FirestoreService {
 
     // Crear el perfil del nuevo usuario
     putUser(user: User) {
-        return this.db.collection('users').doc(user.telefono).set(user);
+        return this.db.collection('users').doc(user.telefono).set({...user, calif: 0});
+    }
+
+    // Obtenemos la información del usuario
+    getUser(phoneNumber: string) {
+        return this.db.collection('users').doc(phoneNumber).get().pipe(tap(), first()).toPromise();
     }
 
     // Crear el nuevo servicio

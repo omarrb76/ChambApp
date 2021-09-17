@@ -3,14 +3,22 @@
     <!-- Titulo -->
     <div class="row">
         <div class="col">
-            <h3>Perfil de usuario</h3>
+            <h3>Mi Perfil</h3>
         </div>
     </div>
 
     <!-- Foto de perfil -->
     <div class="row mt-2">
-        <div class="col-6 mx-auto text-center">
-            <img class="img-fluid rounded" src="../../../assets/img/David.jpg" alt="profile_picture" />
+        <div class="col-6 mx-auto text-center col-md-4">
+            <img class="img-fluid rounded" [src]="userFirebase.photoURL" alt="profile_picture" />
+        </div>
+    </div>
+
+    <!-- Calificación del usuario -->
+    <div class="row mt-2">
+        <div class="col-6 mx-auto text-center col-md-4">
+            <i class="fas fa-star text-verde calif" *ngFor="let i of calif"></i>
+            <i class="far fa-star calif" *ngFor="let i of calif_aux"></i>
         </div>
     </div>
 
@@ -42,18 +50,12 @@
                     aria-labelledby="list-home-list">
                     <ul class="list-group">
                         <li class="list-group-item list-group-item-secondary">
-                            <strong>Nombre:</strong> David Francisco Cortes Pérez
+                            <strong>Nombre:</strong> {{userFirestore.nombre + ' ' + userFirestore.apellido}}
                         </li>
-                        <li class="list-group-item list-group-item-secondary">Usuario: Cortes12345</li>
-                        <li class="list-group-item list-group-item-secondary">Calificacion:
-                            <br>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </li>
-                        <li class="list-group-item list-group-item-secondary">Estado/Ciudad: Aguascalientes</li>
+                        <li class="list-group-item list-group-item-secondary">
+                            <strong>Usuario:</strong> {{userFirestore.username}}</li>
+                        <li class="list-group-item list-group-item-secondary">
+                            <strong>Estado:</strong> {{userFirestore.estado}}</li>
                     </ul>
                 </div>
                 <div class="tab-pane fade" id="tags" role="tabpanel" aria-labelledby="list-home-list">

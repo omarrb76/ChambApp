@@ -126,6 +126,11 @@ export class SignupComponent implements OnInit {
                 .confirm(this.code.value)
                 .then(async (result: any) => {
 
+                    await this.authService.updateProfile({
+                        displayName: this.nombre.value,
+                        photoURL: 'https://firebasestorage.googleapis.com/v0/b/chambapp-5ff14.appspot.com/o/default-picture.png?alt=media&token=ace458da-7cea-43bc-95b4-41af42e71906'
+                    })?.then();
+
                     const nuevoUsuario: User = {
                         nombre: this.nombre.value,
                         apellido: this.apellido.value,
