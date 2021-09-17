@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { Servicio } from 'src/app/models/Servicio';
 import { User } from 'src/app/models/User';
+import { tap, first } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,20 @@ export class FirestoreService {
     // Actualizar el servicio
     updateServicio(servicio: Servicio, id: string) {
         return this.db.collection('servicios').doc(id).update(servicio);
+    }
+
+    // Revisa si existe el numero en la BD
+    async getNumeroExists(numero: string) {
+        let respuesta = false;
+        await this.db.collection('users').doc(numero).get().pipe(tap(), first()).toPromise().then((x: any) => respuesta = x.exists);
+        return respuesta;
+    }
+
+    // Revisa si ya existe el nombre de usuario
+    async getUsernameExists(username: string) {
+        let respuesta = false;
+        await this.db.collection('users', res => res.where('username', '==', username)).get().pipe(tap(), first()).toPromise().then((x: any) => respuesta = !x.empty);
+        return respuesta;
     }
 
     /********************* METODOS DE EJEMPLO (YA LOS BORRAREMOS) ************************/

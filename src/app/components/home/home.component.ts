@@ -1,3 +1,4 @@
+import { FirestoreService } from './../../services/firebase/firestore.service';
 import { AuthService } from './../../services/firebase/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,7 +13,8 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private authService: AuthService
+        private authService: AuthService,
+        private firestore: FirestoreService
     ) { }
 
     ngOnInit(): void {
