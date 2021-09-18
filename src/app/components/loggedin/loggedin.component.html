@@ -1,8 +1,13 @@
 <div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
 
     <div class="row">
-        <div class="col">
-            <h3>{{getSaludoHora()}}</h3>
+        <div class="col d-flex align-items-center">
+            <div>
+                <h3>{{getSaludoHora()}}</h3>
+            </div>
+        </div>
+        <div class="col-3 d-flex align-items-center">
+            <img class="imagen-inicio" [src]="user.photoURL" alt="profile_picture" />
         </div>
     </div>
 

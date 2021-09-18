@@ -23,6 +23,10 @@ export class FirestoreService {
         return this.db.collection('users').doc(phoneNumber).get().pipe(tap(), first()).toPromise();
     }
 
+    updateUser(user: any, id: string) {
+        return this.db.collection('users').doc(id).update(user);
+    }
+
     // Crear el nuevo servicio
     putServicio(servicio: Servicio, id: string) {
         return this.db.collection('servicios').doc(id).set(servicio);

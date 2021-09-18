@@ -45,6 +45,7 @@ export class LoggedinComponent implements OnInit {
     ngOnInit(): void {
         this.authService.getUsuarioConectado().subscribe((user: any) => {
             if (!user) { this.authService.navigate('home'); }
+            this.user = user;
             this.loading = false;
         });
     }

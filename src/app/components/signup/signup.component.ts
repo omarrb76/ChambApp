@@ -53,7 +53,12 @@ export class SignupComponent implements OnInit {
                 Validators.minLength(2),
                 Validators.maxLength(25)
             ]),
-            apellido: new FormControl(null, [Validators.required, Validators.pattern('[a-zA-Z .]+')]),
+            apellido: new FormControl(null, [
+                Validators.required,
+                Validators.pattern('[a-zA-Z .]+'),
+                Validators.minLength(2),
+                Validators.maxLength(25)
+            ]),
             estado: new FormControl(null, Validators.required),
             fecha: new FormControl(null, Validators.required),
             genero: new FormControl(null, Validators.required),

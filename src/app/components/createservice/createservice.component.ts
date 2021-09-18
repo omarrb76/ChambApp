@@ -32,6 +32,7 @@ export class CreateserviceComponent implements OnInit {
     archivos: Archivo[] = [];           // Las fotos que subira el usuario, al menos 1 máximo 5
     loading: boolean = false;           // Mostrar la barra de cargando información a firebase
     user: any;                          // Para obtener el número de teléfono del usuario logeado
+    ubicacion: string = "/";            // Ubicacion para el storage de firebase
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
