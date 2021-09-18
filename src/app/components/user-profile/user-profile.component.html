@@ -10,13 +10,15 @@
     <!-- Foto de perfil -->
     <div class="row mt-2">
         <div class="col-6 mx-auto text-center col-md-4">
-            <img class="img-fluid rounded" [src]="userFirebase.photoURL" alt="profile_picture" />
+            <div class="contenedor">
+                <img class="rounded" [src]="userFirebase.photoURL" alt="profile_picture" />
+            </div>
         </div>
     </div>
 
     <!-- Calificación del usuario -->
     <div class="row mt-2">
-        <div class="col-8 mx-auto text-center col-md-4">
+        <div class="col mx-auto text-center">
             <i class="fas fa-star text-verde calif" *ngFor="let i of calif"></i>
             <i class="far fa-star calif" *ngFor="let i of calif_aux"></i>
         </div>

@@ -10,12 +10,14 @@
     <!-- Foto de perfil -->
     <div class="row mt-2">
         <div class="col-6 mx-auto text-center col-md-4 contenedor-imagen">
-            <img class="img-fluid rounded imagen-editar" [src]="userFirebase.photoURL" alt="profile_picture"
-                id="profile-image" />
-            <div class="overlay-imagen">
-                <button class="button-none icono-editar" title="Cambiar foto de perfil" (click)="input.click()">
-                    <i class="fas fa-pen text-verde"></i>
-                </button>
+            <div class="contenedor">
+                <img class="img-fluid rounded imagen-editar" [src]="userFirebase.photoURL" alt="profile_picture"
+                    id="profile-image" />
+                <div class="overlay-imagen">
+                    <button class="button-none icono-editar" title="Cambiar foto de perfil" (click)="input.click()">
+                        <i class="fas fa-pen text-verde"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -98,14 +100,15 @@
             <button type="submit" class="btn btn-danger btn-block">Cancelar</button>
         </div>
         <div class="col">
-            <button type="submit" class="btn btn-success btn-block" [disabled]="editFormDisabled" form="editForm">Confirmar</button>
+            <button type="submit" class="btn btn-success btn-block" [disabled]="editFormDisabled"
+                form="editForm">Confirmar</button>
         </div>
     </div>
 
 </div>
 
 <!-- Spinner de cuando carga la pantalla -->
-<ng-container  *ngIf="loading && !loadingFiles">
+<ng-container *ngIf="loading && !loadingFiles">
     <app-loading></app-loading>
 </ng-container>
 
@@ -114,7 +117,8 @@
 <ng-container *ngIf="loadingFiles">
     <div class="container mt-5 pt-3 pt-lg-4">
         <div class="row d-flex justify-content-center">
-            <app-loading-files [files]="archivos" [username]="userFirebase.phoneNumber" [ubicacion]="ubicacion"></app-loading-files>
+            <app-loading-files [files]="archivos" [username]="userFirebase.phoneNumber" [ubicacion]="ubicacion">
+            </app-loading-files>
         </div>
     </div>
 </ng-container>

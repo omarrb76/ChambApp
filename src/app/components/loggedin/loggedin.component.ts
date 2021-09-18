@@ -44,7 +44,9 @@ export class LoggedinComponent implements OnInit {
     // Si no hay un usuario activo, no deberia de estar en esta página
     ngOnInit(): void {
         this.authService.getUsuarioConectado().subscribe((user: any) => {
+            this.loading = true;
             if (!user) { this.authService.navigate('home'); }
+            console.log(this.user);
             this.user = user;
             this.loading = false;
         });
@@ -59,7 +61,7 @@ export class LoggedinComponent implements OnInit {
         if (hora >= 0 && hora <12) saludo = 'Buenos días ';
         else if (hora < 19) saludo = 'Buenas tardes ';
         else saludo = 'Buenas noches '
-        saludo += this.user.displayName;
+        if (this.user != undefined) saludo += this.user.displayName;
         return saludo;
     }
 
