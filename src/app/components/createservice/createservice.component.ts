@@ -33,6 +33,7 @@ export class CreateserviceComponent implements OnInit {
     loading: boolean = false;           // Mostrar la barra de cargando información a firebase
     user: any;                          // Para obtener el número de teléfono del usuario logeado
     ubicacion: string = "/";            // Ubicacion para el storage de firebase
+    userFirestore: any;                 // Para guardar el username en la creación del servicio
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
@@ -81,7 +82,7 @@ export class CreateserviceComponent implements OnInit {
         this.storageService.getLoading$().subscribe((loading: boolean) => this.loading = loading);
 
         // Este si tiene que ser suscripcion, ya que un campo que se llena requiere especificamente del usuario logeado
-        this.authService.getUsuarioConectado().subscribe((user: any) => {
+        this.authService.getUsuarioConectado().subscribe(async (user: any) => {
             if (!user) { this.authService.navigate('home'); }
             this.user = user;
         });
@@ -315,6 +316,9 @@ export class CreateserviceComponent implements OnInit {
         // Le decimos al subject que esta cargando la página
         this.storageService.setLoading$(true);
 
+        // Obtenemos la información del usuario
+        await this.firestoreService.getUser(this.user.phoneNumber).then((res: any) => this.userFirestore = res.data());
+
         // Cuando termine de cargar los archivos ejecutamos lo que hay en el then (subimos la informacion a firebase)
         await this.storageService.getLoading$().pipe(tap(), first())
             .toPromise().then((res: boolean) => {
@@ -331,7 +335,8 @@ export class CreateserviceComponent implements OnInit {
                     descripcion: this.descripcion.value,
                     tags: this.etiquetas.value,
                     horario: this.days.value,
-                    fotos: archivosLinks
+                    fotos: archivosLinks,
+                    username: this.userFirestore.username
                 }
 
                 // Lo ponemos en loading otra vez (solo se ve en conexiones super lentas)

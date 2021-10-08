@@ -13,9 +13,11 @@ export class FirestoreService {
 
     constructor(private db: AngularFirestore) { }
 
+    /***** OPERACIONES DE USUARIO *****/
+
     // Crear el perfil del nuevo usuario
     putUser(user: User) {
-        return this.db.collection('users').doc(user.telefono).set({...user, calif: 0});
+        return this.db.collection('users').doc(user.telefono).set(user);
     }
 
     // Obtenemos la información del usuario
@@ -27,6 +29,8 @@ export class FirestoreService {
         return this.db.collection('users').doc(id).update(user);
     }
 
+    /***** OPERACIONES PARA SERVICIO *****/
+
     // Crear el nuevo servicio
     putServicio(servicio: Servicio, id: string) {
         return this.db.collection('servicios').doc(id).set(servicio);
@@ -36,6 +40,18 @@ export class FirestoreService {
     updateServicio(servicio: Servicio, id: string) {
         return this.db.collection('servicios').doc(id).update(servicio);
     }
+
+    // Obtiene un servicio en específico
+    getServicio(id: string) {
+        return this.db.collection('servicios').doc(id).get().pipe(tap(), first()).toPromise();
+    }
+
+    // Obtiene los servicios que coincidan con el dueño
+    getServicios(id: string) {
+        return this.db.collection('servicios', res => res.where('username', '==', id)).get().pipe(tap(), first()).toPromise();
+    }
+
+    /***** VALIDACIONES *****/
 
     // Revisa si existe el numero en la BD
     async getNumeroExists(numero: string) {

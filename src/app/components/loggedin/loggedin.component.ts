@@ -8,19 +8,22 @@ const cards = [
         color: 'background-color: #918513',
         src: '../../../assets/img/ico_rayo.png',
         titulo: 'Electricista',
-        contenido: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'
+        contenido: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
+        link: 'omarrb76'
     },
     {
         color: 'background-color: #5F1134',
         src: '../../../assets/img/ico_paint.png',
         titulo: 'Pintor',
-        contenido: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'
+        contenido: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
+        link: 'omarrb76'
     },
     {
         color: 'background-color: #283866',
         src: '../../../assets/img/ico_plumb.png',
         titulo: 'Plomero',
-        contenido: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.'
+        contenido: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
+        link: 'omarrb76'
     }
 ];
 
@@ -46,8 +49,8 @@ export class LoggedinComponent implements OnInit {
         this.authService.getUsuarioConectado().subscribe((user: any) => {
             this.loading = true;
             if (!user) { this.authService.navigate('home'); }
-            console.log(this.user);
             this.user = user;
+            console.log(this.user);
             this.loading = false;
         });
     }

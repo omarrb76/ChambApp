@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'loggedin', component: LoggedinComponent },
   { path: 'search', component: SearchComponent },
   { path: 'user-profile', component: UserProfileComponent },
-  { path: 'servicio', component: ServicioComponent },
+  { path: 'servicio/:id', component: ServicioComponent },
   { path: 'edit-client', component: EditClientComponent },  
   { path: '**', pathMatch: 'full', redirectTo: 'home' }
 ];

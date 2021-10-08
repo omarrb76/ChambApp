@@ -119,22 +119,23 @@ export class EditClientComponent implements OnInit {
                 photoURL: this.imagen
             };
             await this.authService.updateProfile(nuevo);
+            await this.firestoreService.updateUser({ photoURL: this.imagen }, this.userFirebase.phoneNumber).then();
         }
-        
+
         // Si cambio cualquiera de estas cosas, las tenemos que actualizar
         if (this.nombre.value != this.userFirestore.nombre ||
             this.apellido.value != this.userFirestore.apellido ||
             this.estado.value != this.userFirestore.estado ||
             this.fecha.value != this.userFirestore.fecha ||
             this.genero.value != this.userFirestore.genero) {
-                const nuevo = {
-                    nombre: this.nombre.value,
-                    apellido: this.apellido.value,
-                    estado: this.estado.value,
-                    fecha: this.fecha.value,
-                    genero: this.genero.value
-                }
-                await this.firestoreService.updateUser(nuevo, this.userFirebase.phoneNumber).then();
+            const nuevo = {
+                nombre: this.nombre.value,
+                apellido: this.apellido.value,
+                estado: this.estado.value,
+                fecha: this.fecha.value,
+                genero: this.genero.value
+            }
+            await this.firestoreService.updateUser(nuevo, this.userFirebase.phoneNumber).then();
         }
 
         this.loading = false;

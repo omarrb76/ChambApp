@@ -5,5 +5,6 @@ export interface Servicio {
     descripcion: string,
     tags: string[],
     horario: Horario[],
-    fotos: any
+    fotos: any,
+    username: string
 }

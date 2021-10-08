@@ -6,5 +6,7 @@ export interface User {
     genero: string,
     username: string,
     tipo: string,
-    telefono: string
+    telefono: string,
+    calificacion: number,
+    photoURL: string
 }

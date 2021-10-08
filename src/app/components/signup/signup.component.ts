@@ -144,7 +144,9 @@ export class SignupComponent implements OnInit {
                         genero: this.genero.value,
                         username: this.username.value,
                         tipo: this.tipo.value,
-                        telefono: "+52" + this.telefono.value
+                        telefono: "+52" + this.telefono.value,
+                        calificacion: 0,
+                        photoURL: 'https://firebasestorage.googleapis.com/v0/b/chambapp-5ff14.appspot.com/o/default-picture.png?alt=media&token=ace458da-7cea-43bc-95b4-41af42e71906'
                     }
 
                     await this.firestoreService.putUser(nuevoUsuario)
