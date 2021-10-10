@@ -2,7 +2,7 @@ import { Servicio } from './../../models/Servicio';
 import { FirestoreService } from './../../services/firebase/firestore.service';
 import { AuthService } from './../../services/firebase/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-servicio',
@@ -20,6 +20,7 @@ export class ServicioComponent implements OnInit {
     calificacion: number = 4;
     calif: any;                     // Para hacer un ciclo en el HTML que ponga las estrellas
     calif_aux: any;                 // Completar las estrellas huecas
+
 
     constructor(
         private activatedRoute: ActivatedRoute,
