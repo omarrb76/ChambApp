@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'loggedin', component: LoggedinComponent },
-  { path: 'search', component: SearchComponent },
+  { path: 'search/:busqueda', component: SearchComponent },
   { path: 'user-profile', component: UserProfileComponent },
   { path: 'servicio/:id', component: ServicioComponent },
   { path: 'edit-client', component: EditClientComponent },  

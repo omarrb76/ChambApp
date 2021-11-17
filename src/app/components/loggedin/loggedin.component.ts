@@ -2,6 +2,7 @@ import { FirestoreService } from './../../services/firebase/firestore.service';
 import { AuthService } from './../../services/firebase/auth.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { Servicio } from 'src/app/models/Servicio';
 
 const cards = [
     {
@@ -37,6 +38,7 @@ export class LoggedinComponent implements OnInit {
     cards: any[] = cards;
     loading: boolean = true;
     user: any;
+    servicios: Servicio[] = [];
 
     constructor(
         private router: Router,
@@ -53,6 +55,17 @@ export class LoggedinComponent implements OnInit {
             console.log(this.user);
             this.loading = false;
         });
+
+        this.firestoreService.getTodosServicios()
+        .then(data => {
+            data.forEach(doc => {
+                this.servicios.push(doc.data())
+            })
+        })
+        .finally(() => {
+            console.log(this.servicios)
+        })
+
     }
 
     navigate(link: string) { this.router.navigate([link]); }
