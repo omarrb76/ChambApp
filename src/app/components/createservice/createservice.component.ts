@@ -34,7 +34,7 @@ export class CreateserviceComponent implements OnInit {
     loadingInicial: boolean = true;     // Para que se muestre que esta cargando unicamente al inicio
     serviceExists: boolean = false;     // Si el usuario ya tiene un servicio, entonces se lo indicamos
     user: any;                          // Para obtener el número de teléfono del usuario logeado
-    ubicacion: string = "/";            // Ubicacion para el storage de firebase
+    ubicacion: string = "/images/";     // Ubicacion para el storage de firebase
     userFirestore: any;                 // Para guardar el username en la creación del servicio
 
     // Variables para poner errores en el formulario
