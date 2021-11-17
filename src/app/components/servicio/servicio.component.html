@@ -1,4 +1,4 @@
-<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading && existeServicio">
 
     <!-- Titulo -->
     <div class="row">
@@ -81,6 +81,26 @@
 
 
 <!-- Spinner de cuando carga la pantalla -->
-<ng-template #cargando>
+<ng-container *ngIf="loading">
     <app-loading></app-loading>
-</ng-template>
+</ng-container>
+
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading && !existeServicio">
+
+    <!-- Titulo (header) -->
+    <div class="row">
+        <div class="col">
+            <h3>Este servicio no existe</h3>
+        </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="row">
+        <div class="col">
+            <p>
+                Puede que escribió mal el id del servicio o el usuario haya borrado su servicio <span class="text-verde">¡Eso nunca lo sabremos!</span>
+            </p>
+        </div>
+    </div>
+
+</div>

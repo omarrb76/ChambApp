@@ -94,6 +94,13 @@ export class FirestoreService {
         return respuesta;
     }
 
+    // Comprobamos que no exista un servicio a su nombre (número de teléfono)
+    async getServicioExists(id: string) {
+        let respuesta = false;
+        await this.getServicio(id).then(res => respuesta = res.exists);
+        return respuesta;
+    }
+
     /********************* METODOS DE EJEMPLO (YA LOS BORRAREMOS) ************************/
 
     // Conseguimos las tareas

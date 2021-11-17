@@ -1,4 +1,4 @@
-<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading else cargando">
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="!loading && !serviceExists && !loadingInicial">
 
     <!-- Titulo (header) -->
     <div class="row">
@@ -186,10 +186,35 @@
 
 <!-- Spinner de cuando carga la pantalla, junto con barras de progreso para la subida de archivos
     (FEEDBACK) para que el usuario sepa que esta pasando -->
-<ng-template #cargando>
+<ng-container *ngIf="loading && !serviceExists && !loadingInicial">
     <div class="container mt-5 pt-3 pt-lg-4">
         <div class="row d-flex justify-content-center">
             <app-loading-files [files]="archivos" [username]="user.phoneNumber" [ubicacion]="ubicacion"></app-loading-files>
         </div>
     </div>
-</ng-template>
+</ng-container>
+
+<!-- Spinner de cuando carga la pantalla -->
+<ng-container *ngIf="loadingInicial">
+    <app-loading></app-loading>
+</ng-container>
+
+<div class="container mt-5 pt-3 pt-lg-4" *ngIf="serviceExists">
+
+    <!-- Titulo (header) -->
+    <div class="row">
+        <div class="col">
+            <h3>¡Usted ya cuenta con un servicio!</h3>
+        </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="row">
+        <div class="col">
+            <p>
+                Para editar su servicio ya existente haga clic <a (click)="navigate('basura')" class="text-verde pointer">aquí</a>
+            </p>
+        </div>
+    </div>
+
+</div>

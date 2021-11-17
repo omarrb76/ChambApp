@@ -181,12 +181,6 @@ export class SignupComponent implements OnInit {
         }
     }
 
-    // Verificar si el username esta disponible
-    checkUsername() {
-        const exists = this.firestoreService.getUsernameExists(this.username.value);
-        console.log('Exists', exists);
-    }
-
     // GETS
     get nombre() { return this.signUpForm.get('nombre'); }
     get apellido() { return this.signUpForm.get('apellido'); }
