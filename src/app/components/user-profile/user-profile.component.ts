@@ -39,8 +39,8 @@ export class UserProfileComponent implements OnInit {
 
             // Asignamos unos vectores para rellenar las calificaciones
             console.log('Calificacion', this.userFirestore);
-            this.calif = Array(this.userFirestore.calif).fill(0).map((x, i) => i);
-            this.calif_aux = Array(5 - this.userFirestore.calif).fill(0).map((x, i) => i);
+            this.calif = Array(this.userFirestore.calificacion).fill(0).map((x, i) => i);
+            this.calif_aux = Array(5 - this.userFirestore.calificacion).fill(0).map((x, i) => i);
 
             // Dejamos de cargar
             this.loading = false;

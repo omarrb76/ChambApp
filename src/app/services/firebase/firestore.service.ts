@@ -25,6 +25,11 @@ export class FirestoreService {
         return this.db.collection('users').doc(phoneNumber).get().pipe(tap(), first()).toPromise();
     }
 
+    // Obtenemos la información de un usuario dado el username
+    getUserPorUsername(username: string) {
+        return this.db.collection('users', res => res.where('username', '==', username)).get().pipe(tap(), first()).toPromise();
+    }
+
     updateUser(user: any, id: string) {
         return this.db.collection('users').doc(id).update(user);
     }
@@ -49,6 +54,28 @@ export class FirestoreService {
     // Obtiene los servicios que coincidan con el dueño
     getServicios(id: string) {
         return this.db.collection('servicios', res => res.where('username', '==', id)).get().pipe(tap(), first()).toPromise();
+    }
+
+    // Obtiene los servicios que coincidan completamente con el nombre dado
+    getServiciosPorNombre(nombre: string): Servicio[]{
+        let servicios: Servicio[] = [];
+        this.db.collection<Servicio>('servicios').get().toPromise()
+        .then(data => {
+            data.forEach(doc => {
+                if(doc.data().nombre.toLowerCase().search(nombre.toLowerCase()) != -1){
+                    servicios.push(doc.data());
+                }
+            })
+        })
+        .finally(() => {
+            console.log(servicios);
+        })
+        return servicios;
+    }
+
+    // Obtiene todos los servicios sin distincion
+    getTodosServicios(){
+        return this.db.collection<Servicio>('servicios').get().toPromise();
     }
 
     /***** VALIDACIONES *****/
