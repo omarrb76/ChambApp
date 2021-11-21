@@ -96,9 +96,10 @@
                     <label for="username">Nombre de usuario</label>
                     <input type="text" formControlName="username" id="username" (keyup)="keyUp('username')"
                         class="form-control mb-2" autocomplete="off"
-                        [class.is-invalid]="!username.valid && usernameEditado"
-                        [class.is-valid]="username.valid && usernameEditado"
+                        [class.is-invalid]="(!username.valid && usernameEditado) || errorUsername"
+                        [class.is-valid]="username.valid && usernameEditado && !errorUsername"
                         placeholder="Escribe tu nombre de usuario aquí" required>
+                    <small class="form-text text-danger">{{errorUsername}}</small>
                     <small class="form-text text-muted">
                         Tu nombre de usuario debe de tener al menos 4 caractéres y no más de 15 caractéres
                     </small>
@@ -139,9 +140,10 @@
                     <label for="telefono">Teléfono (10 dígitos)</label>
                     <input type="text" formControlName="telefono" id="telefono" (keyup)="keyUp('telefono')"
                         maxlength="10" class="form-control mb-2" autocomplete="off"
-                        [class.is-invalid]="!telefono.valid && telefonoEditado"
-                        [class.is-valid]="telefono.valid && telefonoEditado"
+                        [class.is-invalid]="(!telefono.valid && telefonoEditado) || errorTelefono"
+                        [class.is-valid]="telefono.valid && telefonoEditado && !errorTelefono"
                         placeholder="Escribe tu número de teléfono aquí" required>
+                    <small class="form-text text-danger">{{errorTelefono}}</small>
                     <small class="form-text text-muted">
                         Recibiras un SMS con un código único, úsalo para registrarte.
                     </small>
@@ -167,9 +169,9 @@
                         <label for="code">Código SMS</label>
                         <input type="text" formControlName="code" id="code" (keyup)="keyUp('code')" maxlength="6"
                             class="form-control mb-2" autocomplete="off"
-                            [class.is-invalid]="!code.valid && codeEditado || error"
+                            [class.is-invalid]="!code.valid && codeEditado || errorSMS"
                             [class.is-valid]="code.valid && codeEditado" placeholder="Escribe tu código aquí" required>
-                        <span class="text-danger">{{error}}</span>
+                        <span class="text-danger">{{errorSMS}}</span>
                     </div>
 
                 </form>

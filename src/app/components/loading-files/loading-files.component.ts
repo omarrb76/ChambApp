@@ -19,6 +19,7 @@ export class LoadingFilesComponent implements OnInit {
     // Los archivos nos los van a mandar desde un componente padre
     @Input() files: Archivo[] = [];
     @Input() username: string = "";
+    @Input() ubicacion: string = "";
 
     log: string = "";
 
@@ -46,7 +47,10 @@ export class LoadingFilesComponent implements OnInit {
             // El archivo con el nuevo tamaño (de ser necesario)
             const resized = await this.compressFile(file.archivo).then();
 
-            const filename = this.username + "/images/" + file.archivo.name;
+            // Comprobamos si la foto es de perfil o de servicio
+            let filename = this.username + this.ubicacion;
+            if (this.ubicacion == '/') filename += 'profile';
+            else filename += file.archivo.name;
 
             // Empezamos los trabajos de obtener referencia (link al archivo) y de subir el archivo
             let referencia = this.storageService.URLCloudStorage(filename);

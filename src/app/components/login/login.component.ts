@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
     loginForm: any = null!;     // Formulario de iniciar sesión
     codeForm: any = null!;      // Formulario para colocar SMS del teléfono
     step: number = 0;           // El paso en el que vamos [0 => telefono | 1 => confirmar telefono ]
-    error: string = "";         // Mostramos un mensaje de error si se equivoco en el código de SMS
+    errorTEL: string = "";      // Mostramos error porque el numero no esta registrado
+    errorSMS: string = "";      // Mostramos un mensaje de error si se equivoco en el código de SMS
 
     // Variables para poner errores en el formulario
     telefonoEditado: boolean = false;
@@ -101,13 +102,23 @@ export class LoginComponent implements OnInit {
     }
 
     // Es llamado cuando se envía el formulario completo
-    submitLoginForm() {
+    async submitLoginForm() {
 
         // Lo único que no puedo verificar antes de envíar el formulario es el teléfono, pero eso se arregla con el if de abajo
         if (this.loginForm.valid) {
 
             const appVerifier = this.windowRef.recaptchaVerifier;
             const num = '+52' + this.telefono.value;
+
+            // Verificamos si ya existe un usuario con este número, no queremos borrarle la información
+            const exists = await this.firestoreService.getNumeroExists(num);
+            if (!exists) {
+                this.errorTEL = "Este número no se encuentra registrado, para registrarse haga clic ";
+                return;
+            }
+
+            // Si no existe quitamos el error (en caso de que haya tenido uno)
+            this.errorTEL = "";
 
             this.authService.signInWithPhoneNumber(num, appVerifier)
                 .then(result => {
@@ -132,7 +143,7 @@ export class LoginComponent implements OnInit {
                 })
                 .catch((error: any) => {
                     if (error.code == 'auth/invalid-verification-code') {
-                        this.error = "El código ingresado es incorrecto.";
+                        this.errorSMS = "El código ingresado es incorrecto.";
                     }
                     console.log(error, 'Incorrect code entered')
                 });

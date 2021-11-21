@@ -33,9 +33,10 @@
                     <label for="telefono">Teléfono (10 dígitos)</label>
                     <input type="text" formControlName="telefono" id="telefono" (keyup)="keyUp('telefono')"
                         maxlength="10" class="form-control mb-2" autocomplete="off"
-                        [class.is-invalid]="!telefono.valid && telefonoEditado"
-                        [class.is-valid]="telefono.valid && telefonoEditado"
+                        [class.is-invalid]="!telefono.valid && telefonoEditado || errorTEL"
+                        [class.is-valid]="telefono.valid && telefonoEditado && !errorTEL"
                         placeholder="Escribe tu número de teléfono aquí" required>
+                    <small [hidden]="!errorTEL" class="text-danger">{{ errorTEL }} <a (click)="navigate('signup')" class="text-rojo pointer">aquí</a></small>
                     <small class="form-text text-muted">
                         Recibiras un SMS con un código único, úsalo para iniciar sesión.
                     </small>
@@ -61,9 +62,9 @@
                         <label for="code">Código SMS</label>
                         <input type="text" formControlName="code" id="code" (keyup)="keyUp('code')" maxlength="6"
                             class="form-control mb-2" autocomplete="off"
-                            [class.is-invalid]="!code.valid && codeEditado || error"
+                            [class.is-invalid]="!code.valid && codeEditado || errorSMS"
                             [class.is-valid]="code.valid && codeEditado" placeholder="Escribe tu código aquí" required>
-                        <span class="text-danger">{{error}}</span>
+                        <span class="text-danger">{{errorSMS}}</span>
                     </div>
 
                 </form>

@@ -13,7 +13,7 @@ const estados = [
     'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León',
     'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco',
     'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'
-]
+];
 
 @Component({
     selector: 'app-signup',
@@ -27,7 +27,9 @@ export class SignupComponent implements OnInit {
     codeForm: any = null!;      // Formulario para colocar SMS del teléfono
     estados = estados;          // Los estados de México
     step: number = 0;           // El paso en el que vamos [0 => nombre, apellido, estado | 1 => fecha de nacimiento, genero, nombre de usuario, tipo de usuario | 2 => telefono | 3 => confirmar telefono ]
-    error: string = "";         // Mostramos un mensaje de error si se equivoco en el código de SMS
+    errorUsername: string = ""; // Mostramos error de que ya existe ese username
+    errorTelefono: string = ""; // Mostramos error de que ya existe ese número de teléfono
+    errorSMS: string = "";      // Mostramos un mensaje de error si se equivoco en el código de SMS
     loading: boolean = false;   // Para mostrar un spinner cuando este cargando la pagina
 
     // Variables para poner errores en el formulario
@@ -51,7 +53,12 @@ export class SignupComponent implements OnInit {
                 Validators.minLength(2),
                 Validators.maxLength(25)
             ]),
-            apellido: new FormControl(null, [Validators.required, Validators.pattern('[a-zA-Z .]+')]),
+            apellido: new FormControl(null, [
+                Validators.required,
+                Validators.pattern('[a-zA-Z .]+'),
+                Validators.minLength(2),
+                Validators.maxLength(25)
+            ]),
             estado: new FormControl(null, Validators.required),
             fecha: new FormControl(null, Validators.required),
             genero: new FormControl(null, Validators.required),
@@ -84,13 +91,23 @@ export class SignupComponent implements OnInit {
     }
 
     // Es llamado cuando se envía el formulario completo
-    submitSignUpForm() {
+    async submitSignUpForm() {
 
         // Lo único que no puedo verificar antes de envíar el formulario es el teléfono, pero eso se arregla con el if de abajo
         if (this.signUpForm.valid) {
 
             const appVerifier = this.windowRef.recaptchaVerifier;
             const num = '+52' + this.telefono.value;
+
+            // Verificamos si ya existe un usuario con este número, no queremos borrarle la información
+            const exists = await this.firestoreService.getNumeroExists(num);
+            if (exists) {
+                this.errorTelefono = "Ya existe este número en el sistema Chambapp, no puede registrarse de nuevo";
+                return;
+            }
+
+            // Si no existe quitamos el error (en caso de que haya tenido uno)
+            this.errorTelefono = "";
 
             this.authService.signInWithPhoneNumber(num, appVerifier)
                 .then(result => {
@@ -114,6 +131,11 @@ export class SignupComponent implements OnInit {
                 .confirm(this.code.value)
                 .then(async (result: any) => {
 
+                    await this.authService.updateProfile({
+                        displayName: this.nombre.value,
+                        photoURL: 'https://firebasestorage.googleapis.com/v0/b/chambapp-5ff14.appspot.com/o/default-picture.png?alt=media&token=ace458da-7cea-43bc-95b4-41af42e71906'
+                    })?.then();
+
                     const nuevoUsuario: User = {
                         nombre: this.nombre.value,
                         apellido: this.apellido.value,
@@ -122,7 +144,9 @@ export class SignupComponent implements OnInit {
                         genero: this.genero.value,
                         username: this.username.value,
                         tipo: this.tipo.value,
-                        telefono: "+52" + this.telefono.value
+                        telefono: "+52" + this.telefono.value,
+                        calificacion: 0,
+                        photoURL: 'https://firebasestorage.googleapis.com/v0/b/chambapp-5ff14.appspot.com/o/default-picture.png?alt=media&token=ace458da-7cea-43bc-95b4-41af42e71906'
                     }
 
                     await this.firestoreService.putUser(nuevoUsuario)
@@ -138,7 +162,7 @@ export class SignupComponent implements OnInit {
                 })
                 .catch((error: any) => {
                     if (error.code == 'auth/invalid-verification-code') {
-                        this.error = "El código ingresado es incorrecto.";
+                        this.errorSMS = "El código ingresado es incorrecto.";
                     }
                     console.log(error, 'Incorrect code entered')
                 });
@@ -180,13 +204,28 @@ export class SignupComponent implements OnInit {
     }
 
     // Mostramos diferentes campos del formulario con cada paso
-    cambiarPaso(adelante: boolean) {
+    async cambiarPaso(adelante: boolean) {
+
+        // Esta en el paso del username
+        if (this.step == 1) {
+            // Comprobamos que el username este disponible
+            const exists = await this.firestoreService.getUsernameExists(this.username.value);
+            // Si existe entonces no lo dejamos avanzar y le informamos del error
+            if (exists) {
+                this.errorUsername = "Este nombre de usuario ya existe, por favor elija otro nombre de usuario"
+                return;
+            }
+        }
 
         // Sumamos o restamos el paso
         adelante ? this.step++ : this.step--;
 
         // Esta en el paso de llenar el número de teléfono
         if (this.step == 2) {
+
+            // Quitamos error de username en caso de que existiera uno
+            this.errorUsername = "";
+
             setTimeout(() => {
                 // Obtenemos la referencia de la ventana y dibujamos el reCaptcha
                 this.windowRef = this.windowService.getWindowRef();

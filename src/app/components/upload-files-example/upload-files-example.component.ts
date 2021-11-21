@@ -12,6 +12,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class UploadFilesExampleComponent implements OnInit {
 
+    ubicacion: string = "/";    // Ubicacion para el storage de firebase
+
     // Formulario con el que manejamos la subida de archivos
     public archivoForm = new FormGroup({
         archivo: new FormControl(null, Validators.required),

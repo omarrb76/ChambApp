@@ -31,7 +31,11 @@ export class CreateserviceComponent implements OnInit {
     diaSelected: string = "Domingo";    // Para mostrar el horario de cada dia
     archivos: Archivo[] = [];           // Las fotos que subira el usuario, al menos 1 máximo 5
     loading: boolean = false;           // Mostrar la barra de cargando información a firebase
+    loadingInicial: boolean = true;     // Para que se muestre que esta cargando unicamente al inicio
+    serviceExists: boolean = false;     // Si el usuario ya tiene un servicio, entonces se lo indicamos
     user: any;                          // Para obtener el número de teléfono del usuario logeado
+    ubicacion: string = "/images/";     // Ubicacion para el storage de firebase
+    userFirestore: any;                 // Para guardar el username en la creación del servicio
 
     // Variables para poner errores en el formulario
     nombreEditado: boolean = false;
@@ -77,12 +81,17 @@ export class CreateserviceComponent implements OnInit {
     // Si hay un usuario activo, no deberia de estar en esta página
     ngOnInit(): void {
 
+        // Nos suscribimos para mandar los archivos (lógica del servicio de storage)
         this.storageService.getLoading$().subscribe((loading: boolean) => this.loading = loading);
 
         // Este si tiene que ser suscripcion, ya que un campo que se llena requiere especificamente del usuario logeado
-        this.authService.getUsuarioConectado().subscribe((user: any) => {
+        this.authService.getUsuarioConectado().subscribe(async (user: any) => {
+            this.loadingInicial = true;
             if (!user) { this.authService.navigate('home'); }
             this.user = user;
+            this.serviceExists = await this.firestoreService.getServicioExists(this.user.phoneNumber);
+            console.log("Existe servicio: " + this.serviceExists);
+            this.loadingInicial = false;
         });
 
     }
@@ -314,6 +323,9 @@ export class CreateserviceComponent implements OnInit {
         // Le decimos al subject que esta cargando la página
         this.storageService.setLoading$(true);
 
+        // Obtenemos la información del usuario
+        await this.firestoreService.getUser(this.user.phoneNumber).then((res: any) => this.userFirestore = res.data());
+
         // Cuando termine de cargar los archivos ejecutamos lo que hay en el then (subimos la informacion a firebase)
         await this.storageService.getLoading$().pipe(tap(), first())
             .toPromise().then((res: boolean) => {
@@ -330,7 +342,8 @@ export class CreateserviceComponent implements OnInit {
                     descripcion: this.descripcion.value,
                     tags: this.etiquetas.value,
                     horario: this.days.value,
-                    fotos: archivosLinks
+                    fotos: archivosLinks,
+                    username: this.userFirestore.username
                 }
 
                 // Lo ponemos en loading otra vez (solo se ve en conexiones super lentas)
