@@ -15,7 +15,7 @@ export class SearchComponent implements OnInit {
     loading: boolean = true;
     busqueda: string = "";
     servicios: Servicio[] = [];
-    usuarios:User[] = [];
+    usuarios: User[] = [];
 
     constructor(
         private router: Router,
@@ -26,7 +26,7 @@ export class SearchComponent implements OnInit {
 
     // Si no hay un usuario activo, no deberia de estar en esta página
     ngOnInit(): void {
-        this.route.params.subscribe(params=>{
+        this.route.params.subscribe(params => {
             this.loading = true;
             this.busqueda = params.busqueda;
             this.loadServicios();
@@ -36,57 +36,57 @@ export class SearchComponent implements OnInit {
         });
     }
 
-    loadServicios(){
+    loadServicios() {
         this.servicios = [];
         this.firestoreService.getTodosServicios()
-        .then(data => {
-            data.forEach(doc => {
-                if(doc.data().nombre.toLowerCase().search(this.busqueda.toLowerCase()) != -1){
-                    this.servicios.push(doc.data())
-                }
+            .then(data => {
+                data.forEach(doc => {
+                    if (doc.data().nombre.toLowerCase().search(this.busqueda.toLowerCase()) != -1) {
+                        this.servicios.push(doc.data())
+                    }
+                })
             })
-        })
-        .finally(() => {
-            console.log("Servicios",this.servicios)
-            this.loadUserInfo();
-        })
+            .finally(() => {
+                console.log("Servicios", this.servicios)
+                this.loadUserInfo();
+            })
     }
 
     counter = 0;
-    loadUserInfo(){
+    loadUserInfo() {
         this.usuarios = [];
         this.servicios.forEach(serv => {
             this.firestoreService.getUserPorUsername(serv.username)
-            .then(res => {
-                res.forEach((doc) => {
-                    console.log("dato", doc.data())
-                    this.usuarios.push(doc.data() as User);
+                .then(res => {
+                    res.forEach((doc) => {
+                        console.log("dato", doc.data())
+                        this.usuarios.push(doc.data() as User);
+                    })
                 })
-            })
         })
         this.loading = false;
     }
 
     navigate(link: string) { this.router.navigate([link]); }
 
-    getNombre(i: number){
-        return this.usuarios[i] ? this.usuarios[i].nombre +' '+this.usuarios[i].apellido: ''; 
+    getNombre(i: number) {
+        return this.usuarios[i] ? this.usuarios[i].nombre + ' ' + this.usuarios[i].apellido : '';
     }
 
-    getCalificacion(i: number){
-        return this.usuarios[i] ? this.usuarios[i].calificacion: '';
+    getCalificacion(i: number) {
+        return this.usuarios[i] ? this.usuarios[i].calificacion : '';
     }
 
-    getTelefono(i: number){
-        return this.usuarios[i] ? this.usuarios[i].telefono: '';
+    getTelefono(i: number) {
+        return this.usuarios[i] ? this.usuarios[i].telefono : '';
     }
 
-    getHorario(serv: Servicio){
-        let dias:number[] = []
+    getHorario(serv: Servicio) {
+        let dias: number[] = [];
         let horario: string = "";
-        if(serv.horario.length<7){
+        if (serv.horario.length < 7) {
             serv.horario.forEach(h => {
-                switch(h.dia){
+                switch (h.dia) {
                     case "Lunes": dias.push(1); break;
                     case "Martes": dias.push(2); break;
                     case "Miércoles": dias.push(3); break;
@@ -96,8 +96,8 @@ export class SearchComponent implements OnInit {
                     case "Domingo": dias.push(7); break;
                 }
             });
-            dias.sort((a,b) => a-b);
-            horario = `De ${this.getDia(dias[0])} a ${this.getDia(dias[dias.length-1])} de ${serv.horario[0].hora_inicio} a ${serv.horario[0].hora_termino} horas`
+            dias.sort((a, b) => a - b);
+            horario = `De ${this.getDia(dias[0])} a ${this.getDia(dias[dias.length - 1])} de ${serv.horario[0].hora_inicio} a ${serv.horario[0].hora_termino} horas`
         } else {
             horario = `Todos los dias de ${serv.horario[0].hora_inicio} a ${serv.horario[0].hora_termino} horas`
         }
@@ -105,8 +105,8 @@ export class SearchComponent implements OnInit {
         return horario;
     }
 
-    getDia(dia: number){
-        switch(dia){
+    getDia(dia: number) {
+        switch (dia) {
             case 1: return "Lunes"
             case 2: return "Martes"
             case 3: return "Miércoles"

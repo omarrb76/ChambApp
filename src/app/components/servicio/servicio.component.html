@@ -14,9 +14,6 @@
         <div class="card-content">
             <div class="card-body cleartfix">
                 <div class="media align-items-stretch">
-                    <div class="align-self-center">
-                        <i class="icon-pencil primary font-large-2 mr-2"></i>
-                    </div>
                     <div class="media-body">
                         <h4>{{userFirestore.nombre + ' ' + userFirestore.apellido}}</h4>
                         <span>{{userFirestore.estado}}</span>
@@ -49,10 +46,29 @@
 
     <hr>
 
+    <!-- Horario -->
+    <div class="row">
+        <div class="col">
+            <h5 class="text-muted">Horario:</h5>
+        </div>
+    </div>
+    <ul class="list-group mt-2">
+        <li class="list-group-item border-success" *ngFor="let horario of servicio.horario">
+            <span class="">{{horario.dia}} </span>
+            <span class="float-right border rounded bg-rojo px-2 text-white py-1">{{horario.hora_termino}}</span>
+            <span class="float-right border rounded bg-verde px-2 text-white py-1 mr-2">{{horario.hora_inicio}}</span>
+        </li>
+    </ul>
+
     <!-- Fotos -->
+    <div class="row mt-2">
+        <div class="col">
+            <h5 class="text-muted">Imágenes del servicio:</h5>
+        </div>
+    </div>
     <div class="row d-flex justify-content-center">
         <!-- Imagenes (una vez que el usuario haya subido algo) -->
-        <div class="col-6 col-md-3 my-3" *ngFor="let foto of servicio.fotos" >
+        <div class="col-6 col-md-3 my-3" *ngFor="let foto of servicio.fotos">
             <!-- Imagen -->
             <img class="img-fluid rounded" [src]="foto" alt="Imagen de servicio">
         </div>
@@ -61,17 +77,20 @@
     <!-- Seleccionar fecha -->
     <div class="row mt-3">
         <div class="col">
-            <div class="form-group">
-                <strong><label for="fecha">Selecciona una fecha</label></strong>
-                <input type="date" class="form-control" placeholder="Fecha">
-            </div>
+            <form [formGroup]="citaForm">
+                <div class="form-group">
+                    <strong><label for="fecha">Selecciona una fecha</label></strong>
+                    <input type="date" formControlName="fecha" [min]="minDate" id="fecha" class="form-control"
+                        placeholder="Fecha">
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Boton agendar cita -->
     <div class="row justify-content-center mt-2">
         <div class="col-8">
-            <button type="button" class="btn btn-outline-success btn-lg btn-block">
+            <button type="button" (click)="agendarServicio()" class="btn btn-outline-success btn-lg btn-block">
                 Agendar Cita
             </button>
         </div>
@@ -98,7 +117,8 @@
     <div class="row">
         <div class="col">
             <p>
-                Puede que escribió mal el id del servicio o el usuario haya borrado su servicio <span class="text-verde">¡Eso nunca lo sabremos!</span>
+                Puede que escribió mal el id del servicio o el usuario haya borrado su servicio <span
+                    class="text-verde">¡Eso nunca lo sabremos!</span>
             </p>
         </div>
     </div>

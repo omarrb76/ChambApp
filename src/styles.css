@@ -27,6 +27,10 @@ app-footer {
     background-color: #51BE95 !important;
 }
 
+.bg-rojo {
+    background-color: #d46060 !important;
+}
+
 /* Tamaño del logo cuando el navbar es grande */
 .logo {
     max-width: 50px;

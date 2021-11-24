@@ -1,3 +1,4 @@
+import { Cita } from './../../models/Cita';
 /* Servicio para comunicarnos con firebase */
 
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -57,25 +58,42 @@ export class FirestoreService {
     }
 
     // Obtiene los servicios que coincidan completamente con el nombre dado
-    getServiciosPorNombre(nombre: string): Servicio[]{
+    getServiciosPorNombre(nombre: string): Servicio[] {
         let servicios: Servicio[] = [];
         this.db.collection<Servicio>('servicios').get().toPromise()
-        .then(data => {
-            data.forEach(doc => {
-                if(doc.data().nombre.toLowerCase().search(nombre.toLowerCase()) != -1){
-                    servicios.push(doc.data());
-                }
+            .then(data => {
+                data.forEach(doc => {
+                    if (doc.data().nombre.toLowerCase().search(nombre.toLowerCase()) != -1) {
+                        servicios.push(doc.data());
+                    }
+                })
             })
-        })
-        .finally(() => {
-            console.log(servicios);
-        })
+            .finally(() => {
+                console.log(servicios);
+            })
         return servicios;
     }
 
     // Obtiene todos los servicios sin distincion
-    getTodosServicios(){
+    getTodosServicios() {
         return this.db.collection<Servicio>('servicios').get().toPromise();
+    }
+
+    /***** OPERACIONES PARA CITAS *****/
+
+    // Poner una nueva cita
+    putCita(cita: Cita) {
+        return this.db.collection('citas').doc().set(cita);
+    }
+
+    // Trae todas las citas
+    getCitas(numero: string) {
+        return this.db.collection('citas', res => res.where('numUsuario', '==', numero).orderBy("fechaDeContratacion", "desc")).get().pipe(tap(), first()).toPromise();
+    }
+
+    // Se trae las últimas 5 citas
+    getRecentCitas(numero: string) {
+        return this.db.collection('citas', res => res.where('numUsuario', '==', numero).orderBy("fechaDeContratacion", "desc").limit(5)).get().pipe(tap(), first()).toPromise();
     }
 
     /***** VALIDACIONES *****/
@@ -106,5 +124,5 @@ export class FirestoreService {
     deleteTarea(id: any) {
         return this.db.collection('tareas').doc(id).delete();
     }
-    
+
 }
